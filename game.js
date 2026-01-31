@@ -275,7 +275,7 @@ function progress(state) {
               };
             }
           }
-          break; // このカードタイプは1つだけ出現
+          // break; // 同種のMutationでも複数発生できるようにするため削除
         }
       }
     }

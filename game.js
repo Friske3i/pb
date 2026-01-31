@@ -52,6 +52,7 @@ function getSurroundingCells(row, col, size) {
 // 空地に spawnSize のカードを出現させる条件が満たされているか
 // カード生成の計算では「1マス当たり1枚」でカウント（サイズ2以上のカードは占有マス数ぶん加算）
 // conditions: [{ id: 5, amount: 3 }, { id: 7, amount: 6 }]
+// すべての条件を満たす必要がある（AND条件）
 function isEmptyAndSatisfiesCondition(board, row, col, conditions, spawnSize) {
   if (board[row][col] !== null) return false;
   if (!conditions || conditions.length === 0) return false;
@@ -63,11 +64,12 @@ function isEmptyAndSatisfiesCondition(board, row, col, conditions, spawnSize) {
     const id = cell.cardTypeId;
     cellCountByType[id] = (cellCountByType[id] || 0) + 1;
   }
+  // すべての条件を満たす必要がある
   for (const cond of conditions) {
     const count = cellCountByType[cond.id] || 0;
-    if (count >= cond.amount) return true;
+    if (count < cond.amount) return false; // 1つでも満たさなければfalse
   }
-  return false;
+  return true; // すべて満たせばtrue
 }
 
 // (row,col) を左上として size x size がすべて空いているか
@@ -164,12 +166,24 @@ function progress(state) {
   shuffle(emptyCells);
   for (const { r, c } of emptyCells) {
     if (state.board[r][c] !== null) continue;
-    const card = state.cardTypes[Math.floor(Math.random() * state.cardTypes.length)];
+
+    // 条件を満たすカードを探す
+    const candidateCards = [];
+    for (const card of state.cardTypes) {
+      const size = card.size;
+      if (!isAreaEmpty(state.board, r, c, size)) continue;
+      const conditions = card.conditions || [];
+      if (isEmptyAndSatisfiesCondition(state.board, r, c, conditions, size)) {
+        candidateCards.push(card);
+      }
+    }
+
+    // 候補がなければ次のマスへ
+    if (candidateCards.length === 0) continue;
+
+    // 候補からランダムに1枚選んで配置
+    const card = candidateCards[Math.floor(Math.random() * candidateCards.length)];
     const size = card.size;
-    if (!isAreaEmpty(state.board, r, c, size)) continue;
-    // このカード固有の出現条件で判定
-    const conditions = card.conditions || [];
-    if (!isEmptyAndSatisfiesCondition(state.board, r, c, conditions, size)) continue;
     const placementId = state.placementIdCounter++;
     for (let rr = r; rr < r + size; rr++) {
       for (let cc = c; cc < c + size; cc++) {

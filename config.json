@@ -19,12 +19,6 @@
       "id": 0,
       "name": "Brown Mushroom",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -45,12 +39,6 @@
       "id": 1,
       "name": "Red Mushroom",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -71,12 +59,6 @@
       "id": 2,
       "name": "Cactus",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -97,12 +79,6 @@
       "id": 3,
       "name": "Carrot",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 100,
@@ -123,12 +99,6 @@
       "id": 4,
       "name": "Cocoa Beans",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -149,12 +119,6 @@
       "id": 5,
       "name": "Melon Seeds",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -175,12 +139,6 @@
       "id": 6,
       "name": "Pumpkin",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -201,12 +159,6 @@
       "id": 7,
       "name": "Wheat Seeds",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 100,
         "carrot": 0,
@@ -227,12 +179,6 @@
       "id": 8,
       "name": "Potato",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -253,12 +199,6 @@
       "id": 9,
       "name": "Nether Wart",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -279,12 +219,6 @@
       "id": 10,
       "name": "Wild Rose",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -305,12 +239,6 @@
       "id": 11,
       "name": "Sunflower",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -331,12 +259,6 @@
       "id": 12,
       "name": "Moonflower",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -357,12 +279,6 @@
       "id": 13,
       "name": "Sugar Cane",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -383,12 +299,6 @@
       "id": 14,
       "name": "Dead Plants",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -409,12 +319,6 @@
       "id": 15,
       "name": "Fire",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -547,12 +451,6 @@
       "id": 20,
       "name": "Lonelily",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 700,
@@ -903,12 +801,6 @@
       "id": 32,
       "name": "Fermento",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -1267,12 +1159,6 @@
       "id": 44,
       "name": "Shellfruit",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
@@ -1477,12 +1363,6 @@
       "id": 51,
       "name": "Godseed",
       "size": 3,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 246,
         "carrot": 862,
@@ -1503,12 +1383,6 @@
       "id": 52,
       "name": "Jerryflower",
       "size": 1,
-      "conditions": [
-        {
-          "id": 0,
-          "amount": 99
-        }
-      ],
       "scores": {
         "wheat": 0,
         "carrot": 0,

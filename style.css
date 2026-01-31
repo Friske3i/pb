@@ -114,7 +114,7 @@ body {
 
 .panel h2 {
   margin: 0 0 0.5rem 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
 }
 
@@ -161,6 +161,25 @@ body {
   max-height: 400px;
   overflow-y: auto;
   padding: 2px;
+}
+
+/* Custom scrollbar */
+.card-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.card-list::-webkit-scrollbar-track {
+  background: var(--surface);
+  border-radius: 4px;
+}
+
+.card-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.card-list::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
 }
 
 .card-chip {

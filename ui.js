@@ -241,11 +241,6 @@
             div.addEventListener('mouseenter', showTooltip);
             div.addEventListener('mousemove', moveTooltip);
             div.addEventListener('mouseleave', hideTooltip);
-            div.addEventListener('contextmenu', function (e) {
-              e.preventDefault();
-              // mutationを右クリック → そのmutationを選択
-              selectCard(cell.cardTypeId);
-            });
           } else {
             div.textContent = '';
           }
@@ -641,8 +636,10 @@
           state.selectedCardTypeId = null;
           updateDestroyButton();
           document.querySelectorAll('.card-chip').forEach(function (el) { el.classList.remove('selected'); });
+        } else {
+          // mutationを右クリック → そのmutationを選択
+          selectCard(existingCell.cardTypeId);
         }
-        // mutationがある場合の処理は各セルのイベントハンドラで処理済み
       }
     });
 

@@ -884,14 +884,14 @@
   function clearAll() {
     if (!confirm('Are you sure you want to clear all mutations?')) return;
 
-    // 履歴を保存
-    window.Game.saveStateSnapshot(state);
-
     for (let r = 0; r < window.Game.BOARD_SIZE; r++) {
       for (let c = 0; c < window.Game.BOARD_SIZE; c++) {
         state.board[r][c] = null;
       }
     }
+
+    // 履歴を保存（実行後）
+    window.Game.saveStateSnapshot(state);
     renderAll();
   }
 

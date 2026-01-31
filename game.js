@@ -5,9 +5,9 @@
 
 const BOARD_SIZE = 10;
 
-// config.cards を内部用に正規化: params と出現条件（conditions）を保持
+// config.cards を内部用に正規化: params と出現条件(conditions)を保持
 function normalizeCard(card, scoreParams, id) {
-  const params = scoreParams.map(p => card[p] ?? 0);
+  const params = scoreParams.map(p => card.scores?.[p] ?? card[p] ?? 0);
   const conditions = card.conditions ?? card.spawnCondition?.conditions ?? [];
   return { id: id ?? card.id, name: card.name, size: card.size, params, conditions };
 }

@@ -164,7 +164,18 @@
   function bindEvents() {
     document.getElementById('progressBtn').addEventListener('click', onProgressClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
+    document.getElementById('clearAllBtn').addEventListener('click', clearAll);
     document.getElementById('scoreParamSelector').addEventListener('change', onScoreParamChange);
+  }
+
+  function clearAll() {
+    if (!confirm('Are you sure you want to clear all mutations?')) return;
+    for (let r = 0; r < window.Game.BOARD_SIZE; r++) {
+      for (let c = 0; c < window.Game.BOARD_SIZE; c++) {
+        state.board[r][c] = null;
+      }
+    }
+    renderAll();
   }
 
   function onScoreParamChange(e) {

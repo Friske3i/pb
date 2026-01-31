@@ -118,7 +118,12 @@ body {
   font-weight: 600;
 }
 
-.trash-btn {
+.header-buttons {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
   background: transparent;
   border: 2px solid var(--border);
   border-radius: 6px;
@@ -131,13 +136,13 @@ body {
   justify-content: center;
 }
 
-.trash-btn:hover {
+.icon-btn:hover {
   border-color: #f7768e;
   color: #f7768e;
   background: rgba(247, 118, 142, 0.1);
 }
 
-.trash-btn.active {
+.icon-btn.active {
   border-color: #f7768e;
   color: #f7768e;
   background: rgba(247, 118, 142, 0.2);
@@ -191,6 +196,8 @@ body {
 .card-chip.selected {
   border-color: var(--accent);
   border-width: 3px;
+  padding: 7px;
+  /* 8px - 1px to compensate for thicker border */
   background: rgba(122, 162, 247, 0.35);
   box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.4), 0 4px 12px rgba(122, 162, 247, 0.3);
   transform: translateY(-2px);
@@ -199,6 +206,8 @@ body {
 .card-chip.has-score.selected {
   border-color: var(--score);
   border-width: 3px;
+  padding: 7px;
+  /* 8px - 1px to compensate for thicker border */
   background: rgba(158, 206, 106, 0.35);
   box-shadow: 0 0 0 3px rgba(158, 206, 106, 0.4), 0 4px 12px rgba(158, 206, 106, 0.3);
   transform: translateY(-2px);

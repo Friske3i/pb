@@ -29,7 +29,7 @@
     "mush": "Mushroom",
     "cocoa": "Cocoa Beans"
   },
-  "cards": [
+  "mutations": [
     {
       "id": 0,
       "name": "Brown Mushroom",

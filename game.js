@@ -5,22 +5,22 @@
 
 const BOARD_SIZE = 10;
 
-// config.cards を内部用に正規化: params と出現条件(conditions)を保持
-function normalizeCard(card, scoreParams, id) {
-  const params = scoreParams.map(p => card.scores?.[p] ?? card[p] ?? 0);
-  const conditions = card.conditions ?? card.spawnCondition?.conditions ?? [];
-  const category = card.category ?? 'basecrop'; // デフォルトはbasecrop
-  const maxGrowthStage = card.maxGrowthStage ?? 1; // デフォルトは1（即座に成長完了）
+// config.mutations を内部用に正規化: params と出現条件(conditions)を保持
+function normalizeMutation(mutation, scoreParams, id) {
+  const params = scoreParams.map(p => mutation.scores?.[p] ?? mutation[p] ?? 0);
+  const conditions = mutation.conditions ?? mutation.spawnCondition?.conditions ?? [];
+  const category = mutation.category ?? 'basecrop'; // デフォルトはbasecrop
+  const maxGrowthStage = mutation.maxGrowthStage ?? 1; // デフォルトは1（即座に成長完了）
   return {
-    id: id ?? card.id,
-    name: card.name,
-    size: card.size,
+    id: id ?? mutation.id,
+    name: mutation.name,
+    size: mutation.size,
     params,
     conditions,
-    image: card.image,
+    image: mutation.image,
     category,
     maxGrowthStage,
-    specialEffect: card.specialEffect
+    specialEffect: mutation.specialEffect
   };
 }
 
@@ -73,7 +73,7 @@ function isEmptyAndSatisfiesCondition(board, row, col, conditions, spawnSize) {
   for (const { r, c } of surrounding) {
     const cell = board[r][c];
     if (!cell) continue;
-    const id = cell.cardTypeId;
+    const id = cell.mutationId;
     cellCountByType[id] = (cellCountByType[id] || 0) + 1;
   }
   // すべての条件を満たす必要がある
@@ -99,19 +99,19 @@ function createEmptyBoard() {
   return Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(null));
 }
 
-// config は config.json の内容（scoreParams, spawnCondition, cards）
+// config は config.json の内容（scoreParams, spawnCondition, mutations）
 function createGameState(config) {
   const scoreParams = config.scoreParams || [];
-  const cardTypes = (config.cards || []).map((card, i) => normalizeCard(card, scoreParams, i));
+  const mutationTypes = (config.mutations || []).map((mutation, i) => normalizeMutation(mutation, scoreParams, i));
   const scoreParamIndex = 0; // Wheat固定
   return {
     board: createEmptyBoard(),
-    cardTypes,
+    mutationTypes,
     scoreParamIndex,
     scoreParamName: scoreParams[scoreParamIndex] || '—',
     scoreParams,
     scoreParamNames: config.scoreParamNames || {},
-    selectedCardTypeId: null,
+    selectedMutationId: null,
     placementIdCounter: 0,
     simulationMode: false, // シミュレーションモード（成長段階システム）
     history: [],
@@ -132,32 +132,33 @@ function calculateScore(state) {
       if (counted.has(key)) continue;
       counted.add(key);
 
-      const card = state.cardTypes[cell.cardTypeId];
+      const mutation = state.mutationTypes[cell.mutationId];
 
       // シミュレーションモードがオフの場合: プレイヤー設置は常にスコア0（従来の動作）
       if (!state.simulationMode && cell.isPlayerPlaced) continue;
 
       // シミュレーションモードがオンの場合: プレイヤー設置のmutatedのみスコア0（uncollectable）
-      if (state.simulationMode && cell.isPlayerPlaced && card.category === 'mutated') continue;
+      if (state.simulationMode && cell.isPlayerPlaced && mutation.category === 'mutated') continue;
 
-      // 成長段階チェック: Glasscornは7,8で完了扱い
-      if (card.specialEffect === 'glasscorn') {
+      // 成長段階チェック: 成長完了していなければスコア0（maxGrowthStage=0は常に完了、それ以外はmaxGrowthStageで完了）
+      // Glasscorn: 7,8で完了扱い
+      if (mutation.specialEffect === 'glasscorn') {
         if (cell.growthStage !== 7 && cell.growthStage !== 8) continue;
       } else {
-        if (card.maxGrowthStage > 0 && cell.growthStage < card.maxGrowthStage) continue;
+        if (mutation.maxGrowthStage > 0 && cell.growthStage < mutation.maxGrowthStage) continue;
       }
 
       // 成長完了したMutationはスコアを持つ
-      total += card.params[state.scoreParamIndex] ?? 0;
+      total += mutation.params[state.scoreParamIndex] ?? 0;
     }
   }
   return total;
 }
 
-function placeCard(state, row, col, cardTypeId) {
-  const card = state.cardTypes[cardTypeId];
-  if (!card) return false;
-  const size = card.size;
+function placeMutation(state, row, col, mutationId) {
+  const mutation = state.mutationTypes[mutationId];
+  if (!mutation) return false;
+  const size = mutation.size;
 
   // 範囲チェック（盤面外には置けない）
   if (row < 0 || row + size > BOARD_SIZE || col < 0 || col + size > BOARD_SIZE) {
@@ -178,23 +179,23 @@ function placeCard(state, row, col, cardTypeId) {
   }
 
   // 重なるカードを削除（履歴保存なし）
-  overlapping.forEach(pos => destroyCardInternal(state, pos.row, pos.col));
+  overlapping.forEach(pos => destroyMutationInternal(state, pos.row, pos.col));
 
   // 成長段階の初期値を決定（0から始まる）
   let growthStage;
   if (state.simulationMode) {
     // シミュレーションモード: カテゴリに応じて初期値を設定
-    growthStage = (card.category === 'mutated') ? card.maxGrowthStage : 0;
+    growthStage = (mutation.category === 'mutated') ? mutation.maxGrowthStage : 0;
   } else {
     // 非シミュレーションモード: 常に最大値（成長完了状態）
-    growthStage = card.maxGrowthStage;
+    growthStage = mutation.maxGrowthStage;
   }
 
   const placementId = state.placementIdCounter++;
   for (let r = row; r < row + size; r++) {
     for (let c = col; c < col + size; c++) {
       state.board[r][c] = {
-        cardTypeId,
+        mutationId,
         isPlayerPlaced: true,
         growthStage, // 成長段階を追加
         originRow: row,
@@ -209,16 +210,16 @@ function placeCard(state, row, col, cardTypeId) {
   return true;
 }
 
-function destroyCard(state, row, col) {
+function destroyMutation(state, row, col) {
   const cell = state.board[row][col];
   if (!cell) return false;
 
-  destroyCardInternal(state, row, col);
+  destroyMutationInternal(state, row, col);
   return true;
 }
 
 // 内部用: 履歴を保存せずにカードを破壊
-function destroyCardInternal(state, row, col) {
+function destroyMutationInternal(state, row, col) {
   const cell = state.board[row][col];
   if (!cell) return false;
 
@@ -238,17 +239,17 @@ function progress(state) {
       for (let c = 0; c < BOARD_SIZE; c++) {
         const cell = state.board[r][c];
         if (cell) {
-          const card = state.cardTypes[cell.cardTypeId];
+          const mutation = state.mutationTypes[cell.mutationId];
           // Glasscorn: maxGrowthStage (9) まで育ち、次は1に戻る
-          if (card.specialEffect === 'glasscorn') {
-            if (cell.growthStage >= card.maxGrowthStage - 1) {
+          if (mutation.specialEffect === 'glasscorn') {
+            if (cell.growthStage >= mutation.maxGrowthStage - 1) { // 修正: 8->9ループの修正反映
               cell.growthStage = 1;
             } else {
               cell.growthStage++;
             }
           } else {
             // 通常: 成長段階が最大値未満なら1増やす
-            if (cell.growthStage < card.maxGrowthStage) {
+            if (cell.growthStage < mutation.maxGrowthStage) {
               cell.growthStage++;
             }
           }
@@ -267,17 +268,17 @@ function progress(state) {
   shuffle(emptyCells);
 
   // 各カードタイプについて、出現条件を満たす空きセルを探す
-  for (const card of state.cardTypes) {
-    if (!card.conditions || card.conditions.length === 0) continue;
-    const size = card.size;
+  for (const mutation of state.mutationTypes) {
+    if (!mutation.conditions || mutation.conditions.length === 0) continue;
+    const size = mutation.size;
     for (const { r, c } of emptyCells) {
-      if (isEmptyAndSatisfiesCondition(state.board, r, c, card.conditions, size)) {
+      if (isEmptyAndSatisfiesCondition(state.board, r, c, mutation.conditions, size)) {
         if (isAreaEmpty(state.board, r, c, size)) {
           const placementId = state.placementIdCounter++;
           for (let dr = 0; dr < size; dr++) {
             for (let dc = 0; dc < size; dc++) {
               state.board[r + dr][c + dc] = {
-                cardTypeId: card.id,
+                mutationId: mutation.id,
                 isPlayerPlaced: false,
                 growthStage: 0, // 自然発生は常に成長段階0から開始
                 originRow: r,
@@ -384,8 +385,8 @@ window.Game = {
   loadConfig,
   createGameState,
   calculateScore,
-  placeCard,
-  destroyCard,
+  placeMutation,
+  destroyMutation,
   progress,
   undo,
   redo,
@@ -393,7 +394,7 @@ window.Game = {
   saveStateSnapshot,
   canUndo(state) { return state.historyIndex > 0; },
   canRedo(state) { return state.historyIndex < state.history.length - 1; },
-  getCardTypes(state) { return state.cardTypes; },
+  getMutationTypes(state) { return state.mutationTypes; },
   getBoard(state) { return state.board; },
   getScoreParam(state) { return { index: state.scoreParamIndex, name: state.scoreParamName }; }
 };

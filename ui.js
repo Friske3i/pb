@@ -27,7 +27,8 @@
     renderScoreParamSelector();
     renderScore();
     renderSpawnHint();
-    renderCardList();
+    renderSpawnHint();
+    renderMutationList();
     renderBoard();
     updateDestroyButton();
     updateHistoryButtons();
@@ -62,9 +63,9 @@
     if (el) el.textContent = '各カードごとの出現条件を満たす空地に、そのカードが出現します（点数あり）。';
   }
 
-  function renderCardList() {
-    const list = document.getElementById('cardList');
-    const types = window.Game.getCardTypes(state);
+  function renderMutationList() {
+    const list = document.getElementById('mutationList');
+    const types = window.Game.getMutationTypes(state);
     const { index: scoreParamIndex } = window.Game.getScoreParam(state);
 
     // スコア順にソート（降順）
@@ -72,9 +73,9 @@
     // 依存関係ハイライト時は、必要なカードを優先
     let requiredIds = [];
     if (dependencyHighlightId !== null) {
-      const targetCard = types.find(c => c.id === dependencyHighlightId);
-      if (targetCard && targetCard.conditions) {
-        requiredIds = targetCard.conditions.map(c => c.id);
+      const targetMutation = types.find(c => c.id === dependencyHighlightId);
+      if (targetMutation && targetMutation.conditions) {
+        requiredIds = targetMutation.conditions.map(c => c.id);
       }
     }
 
@@ -92,21 +93,21 @@
         if (!aReq && bReq) return 1;
       }
       return b.params[scoreParamIndex] - a.params[scoreParamIndex];
-    }).filter(card => {
-      return !searchQuery || (card.name && card.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    }).filter(mutation => {
+      return !searchQuery || (mutation.name && mutation.name.toLowerCase().includes(searchQuery.toLowerCase()));
     });
 
     // Create ID map for name lookup
     const idToName = {};
     types.forEach(function (t) { idToName[t.id] = t.name; });
 
-    list.innerHTML = sortedTypes.map((card) => {
-      const scoreVal = card.params[scoreParamIndex];
-      const label = card.name || ('#' + (card.id + 1));
+    list.innerHTML = sortedTypes.map((mutation) => {
+      const scoreVal = mutation.params[scoreParamIndex];
+      const label = mutation.name || ('#' + (mutation.id + 1));
 
       // Store tooltip data in dataset
-      const conditionsStr = (card.conditions && card.conditions.length)
-        ? JSON.stringify(card.conditions.map(c => ({
+      const conditionsStr = (mutation.conditions && mutation.conditions.length)
+        ? JSON.stringify(mutation.conditions.map(c => ({
           name: idToName[c.id] || ('#' + c.id),
           amount: c.amount
         })))
@@ -117,49 +118,49 @@
 
       // 依存関係ハイライト
       if (dependencyHighlightId !== null) {
-        if (card.id === dependencyHighlightId) {
+        if (mutation.id === dependencyHighlightId) {
           hasScore += ' dependency-source';
-        } else if (requiredIds.includes(card.id)) {
+        } else if (requiredIds.includes(mutation.id)) {
           hasScore += ' dependency-highlight';
         } else {
           hasScore += ' dim'; // 関係ないものは薄くする
         }
       }
-      const imageHtml = card.image
-        ? '<img src="' + card.image + '" alt="' + card.name + '" class="card-image">'
+      const imageHtml = mutation.image
+        ? '<img src="' + mutation.image + '" alt="' + mutation.name + '" class="mutation-image">'
         : '';
 
-      return '<button type="button" class="card-chip' + hasScore + '" data-card-id="' + card.id + '" ' +
+      return '<button type="button" class="mutation-chip' + hasScore + '" data-mutation-id="' + mutation.id + '" ' +
         'data-tooltip-title="' + label + '" ' +
-        'data-tooltip-size="' + card.size + '×' + card.size + '" ' +
+        'data-tooltip-size="' + mutation.size + '×' + mutation.size + '" ' +
         'data-tooltip-score="' + scoreVal + '" ' +
         'data-tooltip-conditions=\'' + conditionsStr + '\'>' +
-        '<span class="size-badge">' + card.size + '×' + card.size + '</span>' +
+        '<span class="size-badge">' + mutation.size + '×' + mutation.size + '</span>' +
         '<span class="score-num">' + scoreVal + '</span>' +
         imageHtml +
-        '<div class="card-info">' +
+        '<div class="mutation-info">' +
         '<span>' + label + '</span>' +
         '</div>' +
         '</button>';
     }).join('');
 
-    list.querySelectorAll('.card-chip').forEach(function (btn) {
-      btn.addEventListener('click', function () { selectCard(parseInt(btn.dataset.cardId, 10)); });
+    list.querySelectorAll('.mutation-chip').forEach(function (btn) {
+      btn.addEventListener('click', function () { selectMutation(parseInt(btn.dataset.mutationId, 10)); });
       btn.addEventListener('mouseenter', showTooltip);
 
       btn.addEventListener('mousemove', moveTooltip);
       btn.addEventListener('mouseleave', hideTooltip);
       btn.addEventListener('contextmenu', function (e) {
         e.preventDefault();
-        toggleDependencyHighlight(parseInt(btn.dataset.cardId, 10));
+        toggleDependencyHighlight(parseInt(btn.dataset.mutationId, 10));
       });
     });
   }
 
-  function toggleDependencyHighlight(cardId) {
-    const list = document.getElementById('cardList');
+  function toggleDependencyHighlight(mutationId) {
+    const list = document.getElementById('mutationList');
 
-    if (dependencyHighlightId === cardId) {
+    if (dependencyHighlightId === mutationId) {
       dependencyHighlightId = null;
       renderAll();
       if (list) list.scrollTop = lastScrollTop;
@@ -167,21 +168,21 @@
       if (dependencyHighlightId === null && list) {
         lastScrollTop = list.scrollTop;
       }
-      dependencyHighlightId = cardId;
+      dependencyHighlightId = mutationId;
       renderAll();
       if (list) list.scrollTop = 0;
     }
   }
 
-  function selectCard(cardTypeId) {
+  function selectMutation(mutationId) {
     if (destroyMode) {
       // 破壊モードを自動解除
       destroyMode = false;
       updateDestroyButton();
     }
-    state.selectedCardTypeId = cardTypeId;
-    document.querySelectorAll('.card-chip').forEach(function (el) {
-      el.classList.toggle('selected', parseInt(el.dataset.cardId, 10) === cardTypeId);
+    state.selectedMutationId = mutationId;
+    document.querySelectorAll('.mutation-chip').forEach(function (el) {
+      el.classList.toggle('selected', parseInt(el.dataset.mutationId, 10) === mutationId);
     });
   }
 
@@ -205,15 +206,15 @@
           if (cell.isPlayerPlaced) div.classList.add('player');
           else div.classList.add('spawn');
           if (cell.size > 1) div.classList.add('size-' + cell.size);
-          const card = state.cardTypes[cell.cardTypeId];
+          const mutation = state.mutationTypes[cell.mutationId];
 
-          let score = card.params[state.scoreParamIndex] ?? 0;
+          let score = mutation.params[state.scoreParamIndex] ?? 0;
           if (state.simulationMode) {
             const growthStage = cell.growthStage !== undefined ? cell.growthStage : 0;
-            const maxGrowthStage = card.maxGrowthStage !== undefined ? card.maxGrowthStage : 1;
+            const maxGrowthStage = mutation.maxGrowthStage !== undefined ? mutation.maxGrowthStage : 1;
             const isFullyGrown = (maxGrowthStage === 0) || (growthStage >= maxGrowthStage);
 
-            if (cell.isPlayerPlaced && card.category === 'mutated') {
+            if (cell.isPlayerPlaced && mutation.category === 'mutated') {
               score = 0;
             } else if (!isFullyGrown) {
               score = 0;
@@ -225,53 +226,53 @@
           }
 
           if (isOrigin) {
-            div.dataset.tooltipTitle = card.name || ('#' + (cell.cardTypeId + 1));
+            div.dataset.tooltipTitle = mutation.name || ('#' + (cell.mutationId + 1));
             div.dataset.tooltipScore = score;
-            div.dataset.tooltipSize = card.size + '×' + card.size;
+            div.dataset.tooltipSize = mutation.size + '×' + mutation.size;
 
             // 成長段階情報をツールチップ用に追加
             if (cell.growthStage !== undefined) {
               div.dataset.tooltipGrowthStage = cell.growthStage;
-              div.dataset.tooltipMaxGrowthStage = (card.maxGrowthStage !== undefined) ? card.maxGrowthStage : 1;
+              div.dataset.tooltipMaxGrowthStage = (mutation.maxGrowthStage !== undefined) ? mutation.maxGrowthStage : 1;
               div.dataset.tooltipIsPlayerPlaced = cell.isPlayerPlaced;
-              div.dataset.tooltipCategory = card.category;
-              div.dataset.tooltipSpecialEffect = card.specialEffect;
+              div.dataset.tooltipCategory = mutation.category;
+              div.dataset.tooltipSpecialEffect = mutation.specialEffect;
             }
 
             // Add conditions for tooltip
-            if (card.conditions && card.conditions.length) {
+            if (mutation.conditions && mutation.conditions.length) {
               // Note: need access to idToName or recreate it here, or store it in state
               // For now, let's keep it simple or access it if we can. 
               // Since renderBoard is separate, we'll reconstruct basic name lookup or just show ID
               // Better approach: pass idToName to renderBoard or store in state
               // For simplicity in this edit, we'll map ids as best we can or just use IDs
 
-              // Let's rely on Game.getCardTypes(state) to get names
-              const allParams = window.Game.getCardTypes(state);
+              // Let's rely on Game.getMutationTypes(state) to get names
+              const allParams = window.Game.getMutationTypes(state);
               const nameMap = {};
               allParams.forEach(p => nameMap[p.id] = p.name);
 
-              const conditionsStr = JSON.stringify(card.conditions.map(c => ({
+              const conditionsStr = JSON.stringify(mutation.conditions.map(c => ({
                 name: nameMap[c.id] || ('#' + c.id),
                 amount: c.amount
               })));
               div.dataset.tooltipConditions = conditionsStr;
             }
 
-            if (card.image) {
-              div.innerHTML = '<img src="' + card.image + '" alt="' + card.name + '" class="cell-image">';
+            if (mutation.image) {
+              div.innerHTML = '<img src="' + mutation.image + '" alt="' + mutation.name + '" class="cell-image">';
             } else {
-              div.innerHTML = (card.name || ('#' + (cell.cardTypeId + 1)));
+              div.innerHTML = (mutation.name || ('#' + (cell.mutationId + 1)));
             }
 
             // シミュレーションモード: 成長段階インジケーターを表示
             if (state.simulationMode) {
               const growthStage = cell.growthStage !== undefined ? cell.growthStage : 0;
-              const maxGrowthStage = card.maxGrowthStage !== undefined ? card.maxGrowthStage : 1;
+              const maxGrowthStage = mutation.maxGrowthStage !== undefined ? mutation.maxGrowthStage : 1;
               // maxGrowthStage=0の場合は常にfully grown、それ以外はgrowthStage >= maxGrowthStage
               // 特例: Glasscornは7,8で完了
               let isFullyGrown;
-              if (card.specialEffect === 'glasscorn') {
+              if (mutation.specialEffect === 'glasscorn') {
                 isFullyGrown = (growthStage === 7 || growthStage === 8);
               } else {
                 isFullyGrown = (maxGrowthStage === 0) || (growthStage >= maxGrowthStage);
@@ -326,7 +327,7 @@
           const key = `${cell.placementId}`;
           if (!processedPlacements.has(key)) {
             processedPlacements.add(key);
-            mutationCounts[cell.cardTypeId] = (mutationCounts[cell.cardTypeId] || 0) + 1;
+            mutationCounts[cell.mutationId] = (mutationCounts[cell.mutationId] || 0) + 1;
           }
         }
       }
@@ -344,12 +345,12 @@
     // カウント順にソート（降順）
     const sorted = Object.entries(mutationCounts).sort((a, b) => b[1] - a[1]);
 
-    sorted.forEach(([cardTypeId, count]) => {
-      const card = state.cardTypes[cardTypeId];
-      if (card) {
-        const label = state.scoreParamNames[card.name] || card.name;
-        const imageHtml = card.image
-          ? `<img src="${card.image}" alt="${label}" class="icon">`
+    sorted.forEach(([mutationId, count]) => {
+      const mutation = state.mutationTypes[mutationId];
+      if (mutation) {
+        const label = state.scoreParamNames[mutation.name] || mutation.name;
+        const imageHtml = mutation.image
+          ? `<img src="${mutation.image}" alt="${label}" class="icon">`
           : '';
         html += `<div class="mutation-stat-item">${imageHtml}<span class="name">${label}</span><span class="count">×${count}</span></div>`;
       }
@@ -367,7 +368,7 @@
     }
 
     if (destroyMode) {
-      const success = window.Game.destroyCard(state, row, col);
+      const success = window.Game.destroyMutation(state, row, col);
       if (success) {
         // 履歴を保存（実行後、成功時のみ）
         window.Game.saveStateSnapshot(state);
@@ -377,12 +378,26 @@
       }
       return;
     }
-    if (state.selectedCardTypeId === null) return;
+    if (state.selectedMutationId === null) return;
 
+    if (!canPlaceMutation(row, col, state.selectedMutationId, isDrag)) {
+      return;
+    }
+
+    const ok = window.Game.placeMutation(state, row, col, state.selectedMutationId);
+    if (ok) {
+      // 履歴を保存（実行後）
+      window.Game.saveStateSnapshot(state);
+      lastProcessedCell = { row, col };
+      renderAll();
+    }
+  }
+
+  function canPlaceMutation(row, col, mutationId, isDrag) {
     // ドラッグ時はサイズ2以上のカードを上書きしない
     if (isDrag) {
-      const card = state.cardTypes[state.selectedCardTypeId];
-      const size = card ? card.size : 1;
+      const mutation = state.mutationTypes[mutationId];
+      const size = mutation ? mutation.size : 1;
       const boardSize = window.Game.BOARD_SIZE;
 
       for (let r = row; r < row + size; r++) {
@@ -390,33 +405,34 @@
           if (r >= boardSize || c >= boardSize) continue;
           const cell = state.board[r][c];
           if (cell && cell.size >= 2) {
-            return; // 保護
+            return false;
           }
         }
       }
     }
 
-    // 同じマスに同じmutationを再設置する場合はスキップ
+    // 同じマスに同じmutationを再設置する場合のチェック
     const existingCell = state.board[row][col];
-    if (existingCell && existingCell.cardTypeId === state.selectedCardTypeId) {
-      const card = state.cardTypes[state.selectedCardTypeId];
-      // サイズ1の場合：常にスキップ
-      if (card.size === 1) {
-        return;
+    if (existingCell && existingCell.mutationId === mutationId) {
+      // Simulation Mode: リセット（growthStageの変更）が必要な場合は許可
+      if (state.simulationMode) {
+        const mutation = state.mutationTypes[mutationId];
+        const initialStage = (mutation.category === 'mutated') ? mutation.maxGrowthStage : 0;
+        // 既存のgrowthStageが初期値と異なる場合は、リセットのために上書きを許可する
+        if (existingCell.growthStage !== initialStage) {
+          return true;
+        }
       }
-      // サイズ2以上の場合：同じ配置位置（origin）ならスキップ
-      if (existingCell.originRow === row && existingCell.originCol === col) {
-        return;
-      }
+
+      // 以下、再設置が不要（冗長）な場合はfalseを返す
+      const mutation = state.mutationTypes[mutationId];
+      if (mutation.size === 1) return false;
+
+      // サイズ2以上の場合、原点をクリックした場合は「まったく同じ位置への上書き」なのでスキップ
+      if (existingCell.originRow === row && existingCell.originCol === col) return false;
     }
 
-    const ok = window.Game.placeCard(state, row, col, state.selectedCardTypeId);
-    if (ok) {
-      // 履歴を保存（実行後）
-      window.Game.saveStateSnapshot(state);
-      lastProcessedCell = { row, col };
-      renderAll();
-    }
+    return true;
   }
   async function onCopyImageClick() {
     const btn = document.getElementById('copyImageBtn');
@@ -560,9 +576,9 @@
 
   function toggleDestroyMode() {
     destroyMode = !destroyMode;
-    if (destroyMode) state.selectedCardTypeId = null;
+    if (destroyMode) state.selectedMutationId = null;
     updateDestroyButton();
-    document.querySelectorAll('.card-chip').forEach(function (el) { el.classList.remove('selected'); });
+    document.querySelectorAll('.mutation-chip').forEach(function (el) { el.classList.remove('selected'); });
   }
 
   function updateDestroyButton() {
@@ -703,10 +719,10 @@
     // 既存プレビュー削除（競合状態を防ぐため最初に実行）
     clearPreview();
 
-    if (state.selectedCardTypeId === null || destroyMode || isMouseDown) return;
+    if (state.selectedMutationId === null || destroyMode || isMouseDown) return;
 
-    const card = state.cardTypes[state.selectedCardTypeId];
-    if (!card) return;
+    const mutation = state.mutationTypes[state.selectedMutationId];
+    if (!mutation) return;
 
     // 配置可否を簡易チェック（上書きルールなどは複雑なので、基本は表示しつつ色を変えるなどで対応も可）
     // ここでは単純に表示する
@@ -715,7 +731,7 @@
     preview.className = 'preview-overlay';
 
     // サイズ対応
-    const size = card.size || 1;
+    const size = mutation.size || 1;
     if (size > 1) preview.classList.add('size-' + size);
 
     // 位置設定 (Grid Layoutを利用)
@@ -726,13 +742,13 @@
     preview.style.gridColumnEnd = 'span ' + size;
 
     // 画像があれば表示
-    if (card.image) {
+    if (mutation.image) {
       const img = document.createElement('img');
-      img.src = card.image;
+      img.src = mutation.image;
       preview.appendChild(img);
     } else {
       // 文字で表示の場合
-      preview.textContent = card.name || '';
+      preview.textContent = mutation.name || '';
       preview.style.color = '#fff';
       preview.style.fontSize = '0.8rem';
     }
@@ -815,7 +831,7 @@
       // Destroy Mode Highlight
       if (destroyMode) {
         const targetCell = state.board[r][c];
-        if (targetCell && targetCell.cardTypeId !== undefined) {
+        if (targetCell && targetCell.mutationId !== undefined) {
           // 同じplacementIdを持つ全てのセルをハイライト
           const pid = targetCell.placementId;
 
@@ -866,12 +882,12 @@
           // 空のセルを右クリック → 破壊モードを起動
           clearPreview(); // プレビューを消去
           destroyMode = true;
-          state.selectedCardTypeId = null;
+          state.selectedMutationId = null;
           updateDestroyButton();
-          document.querySelectorAll('.card-chip').forEach(function (el) { el.classList.remove('selected'); });
+          document.querySelectorAll('.mutation-chip').forEach(function (el) { el.classList.remove('selected'); });
         } else {
           // mutationを右クリック → そのmutationを選択
-          selectCard(existingCell.cardTypeId);
+          selectMutation(existingCell.mutationId);
         }
       }
     });
@@ -893,7 +909,7 @@
 
   function onSearchInput(e) {
     searchQuery = e.target.value;
-    renderCardList();
+    renderMutationList();
   }
 
   function clearAll() {
@@ -915,6 +931,16 @@
     state.scoreParamIndex = newIndex;
     state.scoreParamName = state.scoreParams[newIndex];
     renderAll();
+  }
+
+  async function init() {
+    const config = await window.Game.loadConfig();
+    state = window.Game.createGameState(config);
+    renderMutationList();
+    renderAll();
+    bindEvents();
+    updateDestroyButton();
+    updateHistoryButtons();
   }
 
   init();

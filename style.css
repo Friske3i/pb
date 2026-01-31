@@ -180,7 +180,8 @@ body {
   border-color: var(--accent);
 }
 
-.card-list {
+/* Mutation List */
+.mutation-list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
@@ -192,25 +193,21 @@ body {
 }
 
 /* Custom scrollbar */
-.card-list::-webkit-scrollbar {
+.mutation-list::-webkit-scrollbar {
   width: 8px;
 }
 
-.card-list::-webkit-scrollbar-track {
+.mutation-list::-webkit-scrollbar-track {
   background: var(--surface);
   border-radius: 4px;
 }
 
-.card-list::-webkit-scrollbar-thumb {
+.mutation-list::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 4px;
 }
 
-.card-list::-webkit-scrollbar-thumb:hover {
-  background: var(--muted);
-}
-
-.card-chip {
+.mutation-chip {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -226,9 +223,10 @@ body {
   position: relative;
   aspect-ratio: 1;
   min-height: 100px;
+  box-sizing: border-box;
 }
 
-.card-image {
+.mutation-image {
   width: 48px;
   height: 48px;
   object-fit: contain;
@@ -237,9 +235,10 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  margin: 0;
 }
 
-.card-info {
+.mutation-info {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -252,7 +251,7 @@ body {
   width: 100%;
 }
 
-.card-info>span:first-child {
+.mutation-info>span:first-child {
   color: #a0a8c0;
   font-weight: 600;
   font-size: 0.75rem;
@@ -268,6 +267,7 @@ body {
   padding: 2px 6px;
   border-radius: 4px;
   font-weight: 600;
+  z-index: 2;
 }
 
 .score-num {
@@ -280,57 +280,68 @@ body {
   background: rgba(0, 0, 0, 0.3);
   padding: 2px 6px;
   border-radius: 4px;
+  z-index: 2;
 }
 
-.card-chip.has-score {
+.mutation-chip.has-score {
   border-color: var(--score);
   background: rgba(158, 206, 106, 0.1);
 }
 
-.card-chip:hover {
+.mutation-chip:hover {
   border-color: var(--accent);
   background: rgba(122, 162, 247, 0.1);
   transform: translateY(-2px);
 }
 
-.card-chip.has-score:hover {
+.mutation-chip.has-score:hover {
   border-color: var(--score);
   background: rgba(158, 206, 106, 0.15);
 }
 
-.card-chip.selected {
+.mutation-chip.selected {
   border-color: var(--accent);
   border-width: 3px;
   padding: 7px;
-  /* 8px - 1px to compensate for thicker border */
   background: rgba(122, 162, 247, 0.35);
   box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.4), 0 4px 12px rgba(122, 162, 247, 0.3);
   transform: translateY(-2px);
 }
 
-.card-chip.has-score.selected {
+.mutation-chip.has-score.selected {
   border-color: var(--accent);
   border-width: 3px;
   padding: 7px;
-  /* 8px - 1px to compensate for thicker border */
   background: rgba(122, 162, 247, 0.35);
   box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.4), 0 4px 12px rgba(122, 162, 247, 0.3);
   transform: translateY(-2px);
 }
 
-.card-chip .size-badge {
-  font-size: 0.65rem;
-  color: var(--muted);
-  background: var(--surface);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 600;
+.mutation-chip.dependency-highlight {
+  border-color: #ff9e64;
+  background: rgba(255, 158, 100, 0.2);
+  box-shadow: 0 0 10px rgba(255, 158, 100, 0.3);
 }
 
-.card-chip .score-num {
-  color: var(--score);
-  font-weight: 700;
-  font-size: 0.9rem;
+.mutation-chip.dim {
+  opacity: 0.3;
+  filter: grayscale(0.8);
+}
+
+.mutation-chip.dependency-source {
+  border-color: #7aa2f7;
+  background: rgba(122, 162, 247, 0.4);
+  box-shadow: 0 0 15px rgba(122, 162, 247, 0.5);
+}
+
+.mutation-chip.dependency-source:hover {
+  border-color: #7aa2f7;
+  background: rgba(122, 162, 247, 0.5);
+}
+
+.mutation-chip.dependency-highlight:hover {
+  border-color: #ff9e64;
+  background: rgba(255, 158, 100, 0.3);
 }
 
 .btn {
@@ -425,8 +436,6 @@ img {
   z-index: 1;
 }
 
-/* .cell .score-num removed */
-
 .cell.empty:hover {
   background: #2d3047;
   box-shadow: inset 0 0 0 2px var(--accent);
@@ -479,6 +488,12 @@ img {
   color: var(--muted);
 }
 
+/* 破壊モード時はカード選択を無効化 */
+.board-container.destroy-mode .mutation-chip {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 /* Custom Tooltip */
 .tooltip {
   position: fixed;
@@ -517,7 +532,6 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  /* 隙間を追加 */
   margin-bottom: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -561,36 +575,6 @@ img {
 #board.destroy-mode .cell.will-destroy {
   background: rgba(247, 118, 142, 0.25) !important;
   z-index: 50;
-}
-
-
-
-/* Dependency Highlighting */
-.card-chip.dependency-highlight {
-  border-color: #ff9e64;
-  background: rgba(255, 158, 100, 0.2);
-  box-shadow: 0 0 10px rgba(255, 158, 100, 0.3);
-}
-
-.card-chip.dim {
-  opacity: 0.3;
-  filter: grayscale(0.8);
-}
-
-.card-chip.dependency-source {
-  border-color: #7aa2f7;
-  background: rgba(122, 162, 247, 0.4);
-  box-shadow: 0 0 15px rgba(122, 162, 247, 0.5);
-}
-
-.card-chip.dependency-source:hover {
-  border-color: #7aa2f7;
-  background: rgba(122, 162, 247, 0.5);
-}
-
-.card-chip.dependency-highlight:hover {
-  border-color: #ff9e64;
-  background: rgba(255, 158, 100, 0.3);
 }
 
 /* Large Mutation Unified Style */
@@ -661,7 +645,6 @@ img {
   top: 0;
   left: 0;
   z-index: 1;
-  /* Above background */
 }
 
 .cell.origin.size-3 .cell-image {
@@ -674,7 +657,6 @@ img {
   z-index: 1;
 }
 
-/* Mutation Statistics */
 /* Mutation Statistics */
 .mutation-stats {
   margin-top: 16px;
@@ -719,7 +701,6 @@ img {
   font-weight: 600;
 }
 
-
 .mutation-stat-item .icon {
   width: 28px;
   height: 28px;
@@ -742,7 +723,6 @@ img {
   align-items: center;
   gap: 8px;
   margin-left: auto;
-  /* 右寄せ */
   margin-bottom: 12px;
   width: auto;
 }
@@ -783,9 +763,7 @@ img {
   justify-content: center;
   align-items: center;
   position: absolute;
-  /* absolute配置に戻す */
   width: 100%;
-  /* Gridエリア内で最大化 */
   height: 100%;
   transition: all 0.05s ease-out;
 }

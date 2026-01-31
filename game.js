@@ -139,8 +139,8 @@ function calculateScore(state) {
       // シミュレーションモードがオンの場合: プレイヤー設置のmutatedのみスコア0（uncollectable）
       if (state.simulationMode && cell.isPlayerPlaced && card.category === 'mutated') continue;
 
-      // 成長段階チェック: 成長完了していなければスコア0（maxGrowthStageで完了）
-      if (cell.growthStage < card.maxGrowthStage) continue;
+      // 成長段階チェック: 成長完了していなければスコア0（maxGrowthStage=0は常に完了、それ以外はmaxGrowthStageで完了）
+      if (card.maxGrowthStage > 0 && cell.growthStage < card.maxGrowthStage) continue;
 
       // 成長完了したMutationはスコアを持つ
       total += card.params[state.scoreParamIndex] ?? 0;

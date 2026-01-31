@@ -206,7 +206,24 @@
           else div.classList.add('spawn');
           if (cell.size > 1) div.classList.add('size-' + cell.size);
           const card = state.cardTypes[cell.cardTypeId];
-          const score = cell.isPlayerPlaced ? 0 : card.params[state.scoreParamIndex];
+
+          let score = card.params[state.scoreParamIndex] ?? 0;
+          if (state.simulationMode) {
+            const growthStage = cell.growthStage !== undefined ? cell.growthStage : 0;
+            const maxGrowthStage = card.maxGrowthStage !== undefined ? card.maxGrowthStage : 1;
+            const isFullyGrown = (maxGrowthStage === 0) || (growthStage >= maxGrowthStage);
+
+            if (cell.isPlayerPlaced && card.category === 'mutated') {
+              score = 0;
+            } else if (!isFullyGrown) {
+              score = 0;
+            }
+          } else {
+            if (cell.isPlayerPlaced) {
+              score = 0;
+            }
+          }
+
           if (isOrigin) {
             div.dataset.tooltipTitle = card.name || ('#' + (cell.cardTypeId + 1));
             div.dataset.tooltipScore = score;
@@ -215,7 +232,7 @@
             // 成長段階情報をツールチップ用に追加
             if (cell.growthStage !== undefined) {
               div.dataset.tooltipGrowthStage = cell.growthStage;
-              div.dataset.tooltipMaxGrowthStage = card.maxGrowthStage || 1;
+              div.dataset.tooltipMaxGrowthStage = (card.maxGrowthStage !== undefined) ? card.maxGrowthStage : 1;
               div.dataset.tooltipIsPlayerPlaced = cell.isPlayerPlaced;
               div.dataset.tooltipCategory = card.category;
             }
@@ -249,8 +266,9 @@
             // シミュレーションモード: 成長段階インジケーターを表示
             if (state.simulationMode) {
               const growthStage = cell.growthStage !== undefined ? cell.growthStage : 0;
-              const maxGrowthStage = card.maxGrowthStage || 1;
-              const isFullyGrown = growthStage >= maxGrowthStage;
+              const maxGrowthStage = card.maxGrowthStage !== undefined ? card.maxGrowthStage : 1;
+              // maxGrowthStage=0の場合は常にfully grown、それ以外はgrowthStage >= maxGrowthStage
+              const isFullyGrown = (maxGrowthStage === 0) || (growthStage >= maxGrowthStage);
 
               // 成長段階のクラスを追加
               if (isFullyGrown) {
@@ -610,7 +628,8 @@
     if (state.simulationMode && growthStage !== undefined && maxGrowthStage) {
       const stage = parseInt(growthStage, 10);
       const maxStage = parseInt(maxGrowthStage, 10);
-      const isFullyGrown = stage >= maxStage;
+      // maxGrowthStage=0の場合は常にfully grown、それ以外はstage >= maxStage
+      const isFullyGrown = (maxStage === 0) || (stage >= maxStage);
       const statusText = isFullyGrown ? ' (Fully Grown)' : '';
 
       // プレイヤー設置のmutatedには(uncollectable)を追加

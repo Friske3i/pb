@@ -449,7 +449,15 @@
           btn.textContent = 'Copied!';
         } catch (err) {
           console.error('Clipboard write failed:', err);
-          btn.textContent = 'Failed';
+          // Fallback: Secure Context以外ではクリップボード操作がブロックされるため、画像を表示/ダウンロードさせる
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'mutation_plan.png';
+          link.click();
+          URL.revokeObjectURL(url);
+
+          btn.textContent = 'Downloaded';
         }
 
         // 後始末とボタン復帰

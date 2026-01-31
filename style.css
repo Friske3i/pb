@@ -711,8 +711,46 @@ img {
 
 
 .mutation-stat-item .icon {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   border-radius: 2px;
 }
+
+/* Copy Image Button */
+.copy-btn {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  /* 右寄せ */
+  margin-bottom: 12px;
+  width: auto;
+}
+
+.copy-btn svg {
+  opacity: 0.8;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #e1e4ed;
+  border-color: #565f89;
+}
+
+.copy-btn:active {
+  transform: translateY(1px);
+}
+
+.copy-btn:disabled {
+  opacity: 0.5;
+  cursor: wait;

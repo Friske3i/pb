@@ -585,6 +585,69 @@
     tooltip.classList.remove('visible');
   }
 
+
+  // --- Preview Logic ---
+  let currentPreview = null;
+
+  function renderPreview(row, col) {
+    const boardEl = document.getElementById('board');
+    if (!boardEl) return;
+
+    // 既存プレビュー削除
+    if (currentPreview) {
+      if (currentPreview.parentNode) currentPreview.parentNode.removeChild(currentPreview);
+      currentPreview = null;
+    }
+
+    if (state.selectedCardTypeId === null || destroyMode || isMouseDown) return;
+
+    const card = state.cardTypes[state.selectedCardTypeId];
+    if (!card) return;
+
+    // 配置可否を簡易チェック（上書きルールなどは複雑なので、基本は表示しつつ色を変えるなどで対応も可）
+    // ここでは単純に表示する
+
+    const preview = document.createElement('div');
+    preview.className = 'preview-overlay';
+
+    // サイズ対応
+    const size = card.size || 1;
+    if (size > 1) preview.classList.add('size-' + size);
+
+    // 位置設定 (Grid Layoutを利用)
+    // CSS Gridのライン番号は1始まり
+    preview.style.gridRowStart = row + 1;
+    preview.style.gridColumnStart = col + 1;
+    preview.style.gridRowEnd = 'span ' + size;
+    preview.style.gridColumnEnd = 'span ' + size;
+
+    // 画像があれば表示
+    if (card.image) {
+      const img = document.createElement('img');
+      img.src = card.image;
+      preview.appendChild(img);
+    } else {
+      // 文字で表示の場合
+      preview.textContent = card.name || '';
+      preview.style.color = '#fff';
+      preview.style.fontSize = '0.8rem';
+    }
+
+    // 盤面からはみ出る場合はInvalidスタイル（あるいは表示しない）
+    if (row + size > BOARD_SIZE || col + size > BOARD_SIZE) {
+      preview.classList.add('invalid');
+    }
+
+    boardEl.appendChild(preview);
+    currentPreview = preview;
+  }
+
+  function clearPreview() {
+    if (currentPreview) {
+      if (currentPreview.parentNode) currentPreview.parentNode.removeChild(currentPreview);
+      currentPreview = null;
+    }
+  }
   function bindEvents() {
     document.addEventListener('mousedown', (e) => {
       // 左クリックのみをmousedownとして扱う
@@ -630,6 +693,24 @@
         }
       }
     }, true); // Use capture phase for mouseenter on child elements
+    boardEl.addEventListener('mouseover', function (e) {
+      if (isMouseDown) return; // ドラッグ中はプレビューしない
+      const cell = e.target.closest('.cell');
+      if (cell) {
+        renderPreview(parseInt(cell.dataset.row, 10), parseInt(cell.dataset.col, 10));
+      }
+    });
+    boardEl.addEventListener('mouseout', function (e) {
+      const cell = e.target.closest('.cell');
+      if (cell) {
+        // cellから出たとき、relatedTargetがboard外または別のcellならプレビュー更新
+        // renderPreviewは呼ばれるたびに再描画するので、移動時はmouseover配下で処理される
+      }
+    });
+    boardEl.addEventListener('mouseleave', function () {
+      clearPreview();
+    });
+
     boardEl.addEventListener('contextmenu', function (e) {
       const cell = e.target.closest('.cell');
       if (cell) {

@@ -755,3 +755,50 @@ img {
   opacity: 0.5;
   cursor: wait;
 }
+
+/* Board container for positioning */
+.board {
+  position: relative;
+}
+
+/* Preview Overlay */
+.preview-overlay {
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 100;
+  border: 2px dashed #7aa2f7;
+  background: rgba(122, 162, 247, 0.15);
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  /* absolute配置に戻す */
+  width: 100%;
+  /* Gridエリア内で最大化 */
+  height: 100%;
+  transition: all 0.05s ease-out;
+}
+
+.preview-overlay img {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  opacity: 0.8;
+}
+
+.preview-overlay.invalid {
+  border-color: #f7768e;
+  background: rgba(247, 118, 142, 0.15);
+}
+
+/* Mutation Sizes for Preview */
+.preview-overlay.size-2 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.preview-overlay.size-3 {
+  grid-column: span 3;
+  grid-row: span 3;
+}

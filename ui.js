@@ -242,9 +242,8 @@
             div.addEventListener('mouseleave', hideTooltip);
             div.addEventListener('contextmenu', function (e) {
               e.preventDefault();
-              window.Game.saveStateSnapshot(state);
-              window.Game.destroyCard(state, r, c);
-              renderAll();
+              // mutationを右クリック → そのmutationを選択
+              selectCard(cell.cardTypeId);
             });
           } else {
             div.textContent = '';
@@ -262,9 +261,9 @@
     }
 
     if (destroyMode) {
-      // 履歴を保存
-      window.Game.saveStateSnapshot(state);
       window.Game.destroyCard(state, row, col);
+      // 履歴を保存（実行後）
+      window.Game.saveStateSnapshot(state);
       lastProcessedCell = { row, col };
       renderAll();
       return;
@@ -302,19 +301,19 @@
       }
     }
 
-    // 履歴を保存
-    window.Game.saveStateSnapshot(state);
     const ok = window.Game.placeCard(state, row, col, state.selectedCardTypeId);
     if (ok) {
+      // 履歴を保存（実行後）
+      window.Game.saveStateSnapshot(state);
       lastProcessedCell = { row, col };
       renderAll();
     }
   }
 
   function onProgressClick() {
-    // 履歴を保存
-    window.Game.saveStateSnapshot(state);
     window.Game.progress(state);
+    // 履歴を保存（実行後）
+    window.Game.saveStateSnapshot(state);
     renderAll();
   }
 
@@ -416,13 +415,21 @@
   }
 
   function bindEvents() {
-    document.addEventListener('mousedown', () => {
-      isMouseDown = true;
-      lastProcessedCell = null; // マウスダウン時にリセット
+    document.addEventListener('mousedown', (e) => {
+      // 左クリックのみをmousedownとして扱う
+      if (e.button === 0) {
+        isMouseDown = true;
+        lastProcessedCell = null; // マウスダウン時にリセット
+      }
     });
     document.addEventListener('mouseup', () => {
       isMouseDown = false;
       lastProcessedCell = null; // マウスアップ時にリセット
+    });
+    // 右クリック時もisMouseDownをfalseにする
+    document.addEventListener('contextmenu', () => {
+      isMouseDown = false;
+      lastProcessedCell = null;
     });
     document.getElementById('progressBtn').addEventListener('click', onProgressClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
@@ -435,6 +442,9 @@
     // ボードのイベント委譲（重複を防ぐ）
     const boardEl = document.getElementById('board');
     boardEl.addEventListener('mousedown', function (e) {
+      // 左クリックのみ処理
+      if (e.button !== 0) return;
+
       const cell = e.target.closest('.cell');
       if (cell) {
         onCellClick(parseInt(cell.dataset.row, 10), parseInt(cell.dataset.col, 10), false);
@@ -448,6 +458,24 @@
         }
       }
     }, true); // Use capture phase for mouseenter on child elements
+    boardEl.addEventListener('contextmenu', function (e) {
+      const cell = e.target.closest('.cell');
+      if (cell) {
+        e.preventDefault();
+        const row = parseInt(cell.dataset.row, 10);
+        const col = parseInt(cell.dataset.col, 10);
+        const existingCell = state.board[row][col];
+
+        if (!existingCell) {
+          // 空のセルを右クリック → 破壊モードを起動
+          destroyMode = true;
+          state.selectedCardTypeId = null;
+          updateDestroyButton();
+          document.querySelectorAll('.card-chip').forEach(function (el) { el.classList.remove('selected'); });
+        }
+        // mutationがある場合の処理は各セルのイベントハンドラで処理済み
+      }
+    });
 
     // キーボードショートカット
     document.addEventListener('keydown', function (e) {

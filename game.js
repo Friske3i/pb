@@ -9,7 +9,18 @@ const BOARD_SIZE = 10;
 function normalizeCard(card, scoreParams, id) {
   const params = scoreParams.map(p => card.scores?.[p] ?? card[p] ?? 0);
   const conditions = card.conditions ?? card.spawnCondition?.conditions ?? [];
-  return { id: id ?? card.id, name: card.name, size: card.size, params, conditions, image: card.image };
+  const category = card.category ?? 'basecrop'; // デフォルトはbasecrop
+  const maxGrowthStage = card.maxGrowthStage ?? 1; // デフォルトは1（即座に成長完了）
+  return {
+    id: id ?? card.id,
+    name: card.name,
+    size: card.size,
+    params,
+    conditions,
+    image: card.image,
+    category,
+    maxGrowthStage
+  };
 }
 
 // 出現するカードのサイズに応じた「周囲」のマスを返す（盤面外は含まない）
@@ -101,6 +112,7 @@ function createGameState(config) {
     scoreParamNames: config.scoreParamNames || {},
     selectedCardTypeId: null,
     placementIdCounter: 0,
+    simulationMode: false, // シミュレーションモード（成長段階システム）
     history: [],
     historyIndex: -1
   };
@@ -113,11 +125,24 @@ function calculateScore(state) {
   for (let r = 0; r < BOARD_SIZE; r++) {
     for (let c = 0; c < BOARD_SIZE; c++) {
       const cell = state.board[r][c];
-      if (!cell || cell.isPlayerPlaced) continue;
+      if (!cell) continue;
+
       const key = `${cell.originRow},${cell.originCol}`;
       if (counted.has(key)) continue;
       counted.add(key);
+
       const card = state.cardTypes[cell.cardTypeId];
+
+      // シミュレーションモードがオフの場合: プレイヤー設置は常にスコア0（従来の動作）
+      if (!state.simulationMode && cell.isPlayerPlaced) continue;
+
+      // シミュレーションモードがオンの場合: プレイヤー設置のmutatedのみスコア0（uncollectable）
+      if (state.simulationMode && cell.isPlayerPlaced && card.category === 'mutated') continue;
+
+      // 成長段階チェック: 成長完了していなければスコア0（maxGrowthStageで完了）
+      if (cell.growthStage < card.maxGrowthStage) continue;
+
+      // 成長完了したMutationはスコアを持つ
       total += card.params[state.scoreParamIndex] ?? 0;
     }
   }
@@ -150,12 +175,23 @@ function placeCard(state, row, col, cardTypeId) {
   // 重なるカードを削除（履歴保存なし）
   overlapping.forEach(pos => destroyCardInternal(state, pos.row, pos.col));
 
+  // 成長段階の初期値を決定（0から始まる）
+  let growthStage;
+  if (state.simulationMode) {
+    // シミュレーションモード: カテゴリに応じて初期値を設定
+    growthStage = (card.category === 'mutated') ? card.maxGrowthStage : 0;
+  } else {
+    // 非シミュレーションモード: 常に最大値（成長完了状態）
+    growthStage = card.maxGrowthStage;
+  }
+
   const placementId = state.placementIdCounter++;
   for (let r = row; r < row + size; r++) {
     for (let c = col; c < col + size; c++) {
       state.board[r][c] = {
         cardTypeId,
         isPlayerPlaced: true,
+        growthStage, // 成長段階を追加
         originRow: row,
         originCol: col,
         size,
@@ -191,6 +227,23 @@ function destroyCardInternal(state, row, col) {
 }
 
 function progress(state) {
+  // シミュレーションモード: 既存のMutationの成長段階を進める
+  if (state.simulationMode) {
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        const cell = state.board[r][c];
+        if (cell) {
+          const card = state.cardTypes[cell.cardTypeId];
+          // 成長段階が最大値未満なら1増やす（0からmaxGrowthStageまで）
+          if (cell.growthStage < card.maxGrowthStage) {
+            cell.growthStage++;
+          }
+        }
+      }
+    }
+  }
+
+  // 空きセルを収集
   const emptyCells = [];
   for (let r = 0; r < BOARD_SIZE; r++) {
     for (let c = 0; c < BOARD_SIZE; c++) {
@@ -198,44 +251,36 @@ function progress(state) {
     }
   }
   shuffle(emptyCells);
-  for (const { r, c } of emptyCells) {
-    if (state.board[r][c] !== null) continue;
 
-    // 条件を満たすカードを探す
-    const candidateCards = [];
-    for (const card of state.cardTypes) {
-      const size = card.size;
-      if (!isAreaEmpty(state.board, r, c, size)) continue;
-      const conditions = card.conditions || [];
-      if (isEmptyAndSatisfiesCondition(state.board, r, c, conditions, size)) {
-        candidateCards.push(card);
-      }
-    }
-
-    // 候補がなければ次のマスへ
-    if (candidateCards.length === 0) continue;
-
-    // 候補からランダムに1枚選んで配置
-    const card = candidateCards[Math.floor(Math.random() * candidateCards.length)];
+  // 各カードタイプについて、出現条件を満たす空きセルを探す
+  for (const card of state.cardTypes) {
+    if (!card.conditions || card.conditions.length === 0) continue;
     const size = card.size;
-    const placementId = state.placementIdCounter++;
-    for (let rr = r; rr < r + size; rr++) {
-      for (let cc = c; cc < c + size; cc++) {
-        state.board[rr][cc] = {
-          cardTypeId: card.id,
-          isPlayerPlaced: false,
-          originRow: r,
-          originCol: c,
-          size,
-          placementId,
-          row: rr,
-          col: cc
-        };
+    for (const { r, c } of emptyCells) {
+      if (isEmptyAndSatisfiesCondition(state.board, r, c, card.conditions, size)) {
+        if (isAreaEmpty(state.board, r, c, size)) {
+          const placementId = state.placementIdCounter++;
+          for (let dr = 0; dr < size; dr++) {
+            for (let dc = 0; dc < size; dc++) {
+              state.board[r + dr][c + dc] = {
+                cardTypeId: card.id,
+                isPlayerPlaced: false,
+                growthStage: 0, // 自然発生は常に成長段階0から開始
+                originRow: r,
+                originCol: c,
+                size,
+                placementId,
+                row: r + dr,
+                col: c + dc
+              };
+            }
+          }
+          break; // このカードタイプは1つだけ出現
+        }
       }
     }
   }
 }
-
 function shuffle(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));

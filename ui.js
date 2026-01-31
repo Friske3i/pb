@@ -212,6 +212,14 @@
             div.dataset.tooltipScore = score;
             div.dataset.tooltipSize = card.size + '×' + card.size;
 
+            // 成長段階情報をツールチップ用に追加
+            if (cell.growthStage !== undefined) {
+              div.dataset.tooltipGrowthStage = cell.growthStage;
+              div.dataset.tooltipMaxGrowthStage = card.maxGrowthStage || 1;
+              div.dataset.tooltipIsPlayerPlaced = cell.isPlayerPlaced;
+              div.dataset.tooltipCategory = card.category;
+            }
+
             // Add conditions for tooltip
             if (card.conditions && card.conditions.length) {
               // Note: need access to idToName or recreate it here, or store it in state
@@ -236,6 +244,26 @@
               div.innerHTML = '<img src="' + card.image + '" alt="' + card.name + '" class="cell-image">';
             } else {
               div.innerHTML = (card.name || ('#' + (cell.cardTypeId + 1)));
+            }
+
+            // シミュレーションモード: 成長段階インジケーターを表示
+            if (state.simulationMode) {
+              const growthStage = cell.growthStage !== undefined ? cell.growthStage : 0;
+              const maxGrowthStage = card.maxGrowthStage || 1;
+              const isFullyGrown = growthStage >= maxGrowthStage;
+
+              // 成長段階のクラスを追加
+              if (isFullyGrown) {
+                div.classList.add('fully-grown');
+              } else {
+                div.classList.add('growing');
+              }
+
+              // 成長段階テキストを表示（すべてのケースで表示、数字/数字形式のみ）
+              const stageIndicator = document.createElement('div');
+              stageIndicator.className = 'growth-stage';
+              stageIndicator.textContent = growthStage + '/' + maxGrowthStage;
+              div.appendChild(stageIndicator);
             }
 
             div.addEventListener('mouseenter', showTooltip);
@@ -573,6 +601,29 @@
       `;
     }
 
+    // 成長段階情報を追加（シミュレーションモード時）
+    const growthStage = target.dataset.tooltipGrowthStage;
+    const maxGrowthStage = target.dataset.tooltipMaxGrowthStage;
+    const isPlayerPlaced = target.dataset.tooltipIsPlayerPlaced;
+    const category = target.dataset.tooltipCategory;
+
+    if (state.simulationMode && growthStage !== undefined && maxGrowthStage) {
+      const stage = parseInt(growthStage, 10);
+      const maxStage = parseInt(maxGrowthStage, 10);
+      const isFullyGrown = stage >= maxStage;
+      const statusText = isFullyGrown ? ' (Fully Grown)' : '';
+
+      // プレイヤー設置のmutatedには(uncollectable)を追加
+      const uncollectableText = (isPlayerPlaced === 'true' && category === 'mutated') ? ' (uncollectable)' : '';
+
+      html += `
+        <div class="tooltip-row">
+          <span>Growth:</span>
+          <span>${stage}/${maxStage}${statusText}${uncollectableText}</span>
+        </div>
+      `;
+    }
+
     html += `</div>`;
     tooltip.innerHTML = html;
     tooltip.classList.add('visible');
@@ -693,6 +744,12 @@
     document.getElementById('redoBtn').addEventListener('click', onRedo);
     document.getElementById('scoreParamSelector').addEventListener('change', onScoreParamChange);
     document.getElementById('mutationSearch').addEventListener('input', onSearchInput);
+
+    // シミュレーションモードトグル
+    document.getElementById('simulationModeToggle').addEventListener('change', function (e) {
+      state.simulationMode = e.target.checked;
+      renderBoard(); // ボードを再描画して成長段階インジケーターを表示/非表示
+    });
 
     // ボードのイベント委譲（重複を防ぐ）
     const boardEl = document.getElementById('board');

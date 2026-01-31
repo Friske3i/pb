@@ -574,6 +574,87 @@
     renderAll();
   }
 
+  // --- Batch Progress Modal Logic ---
+  const modal = {
+    el: null,
+    input: null,
+    resolve: null,
+    init() {
+      this.el = document.getElementById('batchProgressModal');
+      this.input = document.getElementById('batchProgressInput');
+
+      document.getElementById('batchProgressCancelBtn').addEventListener('click', () => this.close(null));
+      document.getElementById('batchProgressConfirmBtn').addEventListener('click', () => this.confirm());
+      document.getElementById('batchProgressPlusBtn').addEventListener('click', () => this.adjust(1));
+      document.getElementById('batchProgressMinusBtn').addEventListener('click', () => this.adjust(-1));
+
+      // Close on outside click
+      this.el.addEventListener('click', (e) => {
+        if (e.target === this.el) this.close(null);
+      });
+
+      // Enter key in input
+      this.input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') this.confirm();
+        if (e.key === 'Escape') this.close(null);
+      });
+    },
+    open(defaultValue = 10) {
+      if (!this.el) this.init();
+      this.input.value = defaultValue;
+      this.el.classList.remove('hidden');
+      this.input.focus();
+      this.input.select();
+
+      return new Promise(resolve => {
+        this.resolve = resolve;
+      });
+    },
+    close(value) {
+      this.el.classList.add('hidden');
+      if (this.resolve) {
+        this.resolve(value);
+        this.resolve = null;
+      }
+    },
+    confirm() {
+      const val = parseInt(this.input.value, 10);
+      if (isNaN(val) || val <= 0) {
+        // Simple visual feedback or ignore
+        this.input.classList.add('error');
+        setTimeout(() => this.input.classList.remove('error'), 200);
+        return;
+      }
+      this.close(val);
+    },
+    adjust(delta) {
+      let val = parseInt(this.input.value, 10) || 0;
+      val += delta;
+      if (val < 1) val = 1;
+      this.input.value = val;
+    }
+  };
+
+  async function onProgressContextmenu(e) {
+    if (!state.simulationMode) return;
+    e.preventDefault();
+
+    // Init modal structure if not already (it's called in modal.open or init)
+    // Wait for user input from modal
+    const count = await modal.open(10);
+
+    if (!count) return; // Cancelled
+
+    // 指定回数分進める
+    for (let i = 0; i < count; i++) {
+      window.Game.progress(state);
+    }
+
+    // まとめて1つの履歴として保存
+    window.Game.saveStateSnapshot(state);
+    renderAll();
+  }
+
   function toggleDestroyMode() {
     destroyMode = !destroyMode;
     if (destroyMode) state.selectedMutationId = null;
@@ -786,7 +867,10 @@
       isMouseDown = false;
       lastProcessedCell = null;
     });
-    document.getElementById('progressBtn').addEventListener('click', onProgressClick);
+    const progressBtn = document.getElementById('progressBtn');
+    progressBtn.addEventListener('click', onProgressClick);
+    progressBtn.addEventListener('contextmenu', onProgressContextmenu);
+
     document.getElementById('copyImageBtn').addEventListener('click', onCopyImageClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
     document.getElementById('clearAllBtn').addEventListener('click', clearAll);
@@ -936,6 +1020,11 @@
   async function init() {
     const config = await window.Game.loadConfig();
     state = window.Game.createGameState(config);
+
+    // Modal init must happen after DOM load, init() is called at end of IIFE
+    // Check if modal elements exist to attach listeners early, or do it lazy
+    // Here we do it via modal object lazy init
+
     renderMutationList();
     renderAll();
     bindEvents();

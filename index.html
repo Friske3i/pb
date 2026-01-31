@@ -95,6 +95,31 @@
 
   <script src="game.js"></script>
   <script src="ui.js"></script>
+  <div id="batchProgressModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Batch Progress</h3>
+      <p class="hint">Enter number of stages to advance:</p>
+      <div class="input-group">
+        <button id="batchProgressMinusBtn" class="btn icon-btn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <input type="number" id="batchProgressInput" value="10" min="1" class="search-input text-center">
+        <button id="batchProgressPlusBtn" class="btn icon-btn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-actions">
+        <button id="batchProgressCancelBtn" class="btn destroy-btn">Cancel</button>
+        <button id="batchProgressConfirmBtn" class="btn progress-btn">Run</button>
+      </div>
+    </div>
+  </div>
+
   <div id="tooltip" class="tooltip"></div>
 </body>
 

@@ -208,22 +208,7 @@
           if (cell.size > 1) div.classList.add('size-' + cell.size);
           const mutation = state.mutationTypes[cell.mutationId];
 
-          let score = mutation.params[state.scoreParamIndex] ?? 0;
-          if (state.simulationMode) {
-            const growthStage = cell.growthStage !== undefined ? cell.growthStage : 0;
-            const maxGrowthStage = mutation.maxGrowthStage !== undefined ? mutation.maxGrowthStage : 1;
-            const isFullyGrown = (maxGrowthStage === 0) || (growthStage >= maxGrowthStage);
-
-            if (cell.isPlayerPlaced && mutation.category === 'mutated') {
-              score = 0;
-            } else if (!isFullyGrown) {
-              score = 0;
-            }
-          } else {
-            if (cell.isPlayerPlaced) {
-              score = 0;
-            }
-          }
+          let score = window.Game.calculateCellScore(cell, mutation, state.scoreParamIndex, state.simulationMode);
 
           if (isOrigin) {
             div.dataset.tooltipTitle = mutation.name || ('#' + (cell.mutationId + 1));
@@ -269,18 +254,12 @@
             if (state.simulationMode) {
               const growthStage = cell.growthStage !== undefined ? cell.growthStage : 0;
               const maxGrowthStage = mutation.maxGrowthStage !== undefined ? mutation.maxGrowthStage : 1;
-              // maxGrowthStage=0の場合は常にfully grown、それ以外はgrowthStage >= maxGrowthStage
-              // 特例: Glasscornは7,8で完了
-              let isFullyGrown;
-              if (mutation.specialEffect === 'glasscorn') {
-                isFullyGrown = (growthStage === 7 || growthStage === 8);
-              } else {
-                isFullyGrown = (maxGrowthStage === 0) || (growthStage >= maxGrowthStage);
-              }
+
+              const isHarvestable = score > 0;
 
               // 成長段階のクラスを追加
-              if (isFullyGrown) {
-                div.classList.add('fully-grown');
+              if (isHarvestable) {
+                div.classList.add('fully-grown'); // Keep class name for CSS compatibility, but semantically harvestable
               } else {
                 div.classList.add('growing');
               }
@@ -735,14 +714,14 @@
     if (state.simulationMode && growthStage !== undefined && maxGrowthStage) {
       const stage = parseInt(growthStage, 10);
       const maxStage = parseInt(maxGrowthStage, 10);
-      // maxGrowthStage=0の場合は常にfully grown、それ以外はstage >= maxStage
-      let isFullyGrown;
-      if (specialEffect === 'glasscorn') {
-        isFullyGrown = (stage === 7 || stage === 8);
-      } else {
-        isFullyGrown = (maxStage === 0) || (stage >= maxStage);
-      }
-      const statusText = isFullyGrown ? ' (Fully Grown)' : '';
+
+      // Calculate score again purely for Harvestable check if not passed explicitly,
+      // but here we have score in dataset. 
+      // Careful: dataset score is string.
+      const currentScore = parseFloat(score);
+      const isHarvestable = currentScore > 0;
+
+      const statusText = isHarvestable ? ' (Harvestable)' : '';
 
       // プレイヤー設置のmutatedには(uncollectable)を追加
       const uncollectableText = (isPlayerPlaced === 'true' && category === 'mutated') ? ' (uncollectable)' : '';

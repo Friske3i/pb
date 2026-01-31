@@ -119,6 +119,43 @@ function createGameState(config) {
   };
 }
 
+// 個別のセルのスコアを計算
+function calculateCellScore(cell, mutation, scoreParamIndex, simulationMode) {
+  let baseScore = mutation.params[scoreParamIndex] ?? 0;
+
+  if (!simulationMode) {
+    // Standard mode: Player placed items don't score
+    if (cell.isPlayerPlaced) return 0;
+    return baseScore;
+  }
+
+  // Simulation Mode
+
+  // Player placed mutated items don't score (uncollectable)
+  if (cell.isPlayerPlaced && mutation.category === 'mutated') return 0;
+
+  const growthStage = cell.growthStage || 0;
+
+  // Special Effects
+  if (mutation.specialEffect === 'magic_jerrybean') {
+    const multiplier = Math.floor(growthStage / 15);
+    return baseScore * multiplier;
+  }
+
+  // Glasscorn: 7,8 are fully grown (yields score). Max is 9 (loops back to 1).
+  if (mutation.specialEffect === 'glasscorn') {
+    if (growthStage !== 7 && growthStage !== 8) return 0;
+    return baseScore;
+  }
+
+  // Normal crops
+  const maxGrowthStage = mutation.maxGrowthStage !== undefined ? mutation.maxGrowthStage : 1;
+  // If maxGrowthStage is 0, it's always fully grown
+  if (maxGrowthStage > 0 && growthStage < maxGrowthStage) return 0;
+
+  return baseScore;
+}
+
 // スコア計算: 盤面上の「出現カード」のみ。サイズ2以上も全体で1枚として1回だけ加算
 function calculateScore(state) {
   let total = 0;
@@ -133,23 +170,7 @@ function calculateScore(state) {
       counted.add(key);
 
       const mutation = state.mutationTypes[cell.mutationId];
-
-      // シミュレーションモードがオフの場合: プレイヤー設置は常にスコア0（従来の動作）
-      if (!state.simulationMode && cell.isPlayerPlaced) continue;
-
-      // シミュレーションモードがオンの場合: プレイヤー設置のmutatedのみスコア0（uncollectable）
-      if (state.simulationMode && cell.isPlayerPlaced && mutation.category === 'mutated') continue;
-
-      // 成長段階チェック: 成長完了していなければスコア0（maxGrowthStage=0は常に完了、それ以外はmaxGrowthStageで完了）
-      // Glasscorn: 7,8で完了扱い
-      if (mutation.specialEffect === 'glasscorn') {
-        if (cell.growthStage !== 7 && cell.growthStage !== 8) continue;
-      } else {
-        if (mutation.maxGrowthStage > 0 && cell.growthStage < mutation.maxGrowthStage) continue;
-      }
-
-      // 成長完了したMutationはスコアを持つ
-      total += mutation.params[state.scoreParamIndex] ?? 0;
+      total += calculateCellScore(cell, mutation, state.scoreParamIndex, state.simulationMode);
     }
   }
   return total;
@@ -385,6 +406,7 @@ window.Game = {
   loadConfig,
   createGameState,
   calculateScore,
+  calculateCellScore,
   placeMutation,
   destroyMutation,
   progress,

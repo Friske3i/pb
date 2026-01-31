@@ -1085,16 +1085,17 @@
         "pumpkin": 0,
         "melon": 0,
         "rose": 0,
-        "sun": 4800,
-        "moon": 4800,
-        "cane": 9600,
+        "sun": 600,
+        "moon": 600,
+        "cane": 1200,
         "wart": 0,
         "mush": 0,
         "cocoa": 0
       },
       "image": "assets/Magic_Jellybean.webp",
       "category": "mutated",
-      "maxGrowthStage": 120
+      "maxGrowthStage": 120,
+      "specialEffect": "magic_jerrybean"
     },
     {
       "id": 38,

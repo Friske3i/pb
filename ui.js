@@ -3,6 +3,7 @@
   let state = null;
   let destroyMode = false;
   let searchQuery = '';
+  let dependencyHighlightId = null;
 
   function init() {
     window.Game.loadConfig()
@@ -60,7 +61,29 @@
     const { index: scoreParamIndex } = window.Game.getScoreParam(state);
 
     // スコア順にソート（降順）
+    // スコア順にソート（降順）
+    // 依存関係ハイライト時は、必要なカードを優先
+    let requiredIds = [];
+    if (dependencyHighlightId !== null) {
+      const targetCard = types.find(c => c.id === dependencyHighlightId);
+      if (targetCard && targetCard.conditions) {
+        requiredIds = targetCard.conditions.map(c => c.id);
+      }
+    }
+
     const sortedTypes = types.slice().sort((a, b) => {
+      // ハイライト時は必要なカードを最上位に
+      if (dependencyHighlightId !== null) {
+        // 右クリックされた本人を一番上に
+        if (a.id === dependencyHighlightId) return -1;
+        if (b.id === dependencyHighlightId) return 1;
+
+        // 次に必要なカード
+        const aReq = requiredIds.includes(a.id);
+        const bReq = requiredIds.includes(b.id);
+        if (aReq && !bReq) return -1;
+        if (!aReq && bReq) return 1;
+      }
       return b.params[scoreParamIndex] - a.params[scoreParamIndex];
     }).filter(card => {
       return !searchQuery || (card.name && card.name.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -82,7 +105,17 @@
         })))
         : '';
 
-      const hasScore = scoreVal > 0 ? ' has-score' : '';
+
+      let hasScore = scoreVal > 0 ? ' has-score' : '';
+
+      // 依存関係ハイライト
+      if (dependencyHighlightId !== null) {
+        if (requiredIds.includes(card.id)) {
+          hasScore += ' dependency-highlight';
+        } else if (card.id !== dependencyHighlightId) {
+          hasScore += ' dim'; // 関係ないものは薄くする
+        }
+      }
       const imageHtml = card.image
         ? '<img src="' + card.image + '" alt="' + card.name + '" class="card-image">'
         : '';
@@ -104,9 +137,23 @@
     list.querySelectorAll('.card-chip').forEach(function (btn) {
       btn.addEventListener('click', function () { selectCard(parseInt(btn.dataset.cardId, 10)); });
       btn.addEventListener('mouseenter', showTooltip);
+      btn.addEventListener('mouseenter', showTooltip);
       btn.addEventListener('mousemove', moveTooltip);
       btn.addEventListener('mouseleave', hideTooltip);
+      btn.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+        toggleDependencyHighlight(parseInt(btn.dataset.cardId, 10));
+      });
     });
+  }
+
+  function toggleDependencyHighlight(cardId) {
+    if (dependencyHighlightId === cardId) {
+      dependencyHighlightId = null;
+    } else {
+      dependencyHighlightId = cardId;
+    }
+    renderAll();
   }
 
   function selectCard(cardTypeId) {
@@ -176,6 +223,10 @@
             div.addEventListener('mouseenter', showTooltip);
             div.addEventListener('mousemove', moveTooltip);
             div.addEventListener('mouseleave', hideTooltip);
+            div.addEventListener('contextmenu', function (e) {
+              e.preventDefault();
+              toggleDependencyHighlight(cell.cardTypeId);
+            });
           } else {
             div.textContent = '';
           }

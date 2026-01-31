@@ -221,7 +221,12 @@
               div.dataset.tooltipMaxGrowthStage = (mutation.maxGrowthStage !== undefined) ? mutation.maxGrowthStage : 1;
               div.dataset.tooltipIsPlayerPlaced = cell.isPlayerPlaced;
               div.dataset.tooltipCategory = mutation.category;
+              div.dataset.tooltipCategory = mutation.category;
               div.dataset.tooltipSpecialEffect = mutation.specialEffect;
+
+              if (mutation.specialEffect === 'magic_jerrybean') {
+                div.dataset.tooltipMultiplier = Math.floor(cell.growthStage / 15);
+              }
             }
 
             // Add conditions for tooltip
@@ -720,8 +725,15 @@
       // Careful: dataset score is string.
       const currentScore = parseFloat(score);
       const isHarvestable = currentScore > 0;
+      const isGrowing = maxStage > 0 && stage < maxStage;
 
-      const statusText = isHarvestable ? ' (Harvestable)' : '';
+      // Harvestable takes priority over Growing
+      let statusText = '';
+      if (isHarvestable) {
+        statusText = ' (Harvestable)';
+      } else if (isGrowing) {
+        statusText = ' (Growing)';
+      }
 
       // プレイヤー設置のmutatedには(uncollectable)を追加
       const uncollectableText = (isPlayerPlaced === 'true' && category === 'mutated') ? ' (uncollectable)' : '';
@@ -732,6 +744,15 @@
           <span>${stage}/${maxStage}${statusText}${uncollectableText}</span>
         </div>
       `;
+
+      if (specialEffect === 'magic_jerrybean' && target.dataset.tooltipMultiplier !== undefined) {
+        html += `
+        <div class="tooltip-row">
+          <span>Multiplier:</span>
+          <span>x${target.dataset.tooltipMultiplier}</span>
+        </div>
+      `;
+      }
     }
 
     html += `</div>`;

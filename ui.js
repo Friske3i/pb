@@ -364,17 +364,26 @@
       renderAll();
     }
   }
-
-
   async function onCopyImageClick() {
     const btn = document.getElementById('copyImageBtn');
     const originalText = btn.textContent;
+
+    // html2canvasの存在チェック
+    if (typeof html2canvas === 'undefined') {
+      btn.textContent = 'Error: Library not loaded';
+      setTimeout(() => {
+        btn.textContent = originalText;
+      }, 2000);
+      return;
+    }
+
     btn.textContent = 'Capturing...';
     btn.disabled = true;
 
+    let container = null; // containerをtryブロックの外で宣言
     try {
       // 1. 画面外に専用コンテナを作成
-      const container = document.createElement('div');
+      container = document.createElement('div');
       container.style.position = 'fixed';
       container.style.top = '0';
       container.style.left = '-9999px';
@@ -388,53 +397,53 @@
       container.style.backgroundColor = '#1e1e24';
       container.style.padding = '40px'; // 余白を大きく
       container.style.borderRadius = '12px';
-      // 余計なスタイルをリセット
+      // 余計なスペースを防ぐ
       container.style.boxSizing = 'border-box';
-      container.style.margin = '0';
 
-      // 2. 盤面をクローンして調整
-      const originalBoard = document.getElementById('board');
-      const boardClone = originalBoard.cloneNode(true);
+      // 2. ボードとスタッツをクローン
+      const boardEl = document.getElementById('board');
+      const statsEl = document.getElementById('mutationStats');
+      if (!boardEl || !statsEl) {
+        throw new Error('Required elements (board or mutationStats) not found');
+      }
+
+      const boardClone = boardEl.cloneNode(true);
+      const statsClone = statsEl.cloneNode(true);
+
       // 盤面のスタイルを強制上書き
       boardClone.style.margin = '0';
       boardClone.style.boxShadow = 'none';
-      // グリッドのサイズを保持するために明示的に幅を指定
-      boardClone.style.width = originalBoard.offsetWidth + 'px';
-      boardClone.style.height = originalBoard.offsetHeight + 'px';
-      boardClone.style.flex = 'none'; // flexアイテムとしての伸縮を防ぐ
+      boardClone.style.width = boardEl.offsetWidth + 'px';
+      boardClone.style.height = boardEl.offsetHeight + 'px';
+      boardClone.style.flex = 'none';
 
-      // 3. 統計をクローンして調整
-      const originalStats = document.getElementById('mutationStats');
-      let statsClone = null;
-      if (originalStats) {
-        statsClone = originalStats.cloneNode(true);
-        statsClone.style.margin = '16px 0 0 0'; // 上に少し隙間、他は0
-        statsClone.style.width = originalBoard.offsetWidth + 'px'; // 盤面と同じ幅に
-        statsClone.style.maxWidth = 'none';
-        statsClone.style.boxSizing = 'border-box';
-        statsClone.style.flex = 'none';
-      }
+      // 統計のスタイルを強制上書き
+      statsClone.style.margin = '16px 0 0 0';
+      statsClone.style.width = boardEl.offsetWidth + 'px';
+      statsClone.style.maxWidth = 'none';
+      statsClone.style.boxSizing = 'border-box';
+      statsClone.style.flex = 'none';
 
-      // 4. コンテナに追加
+      // プレビューオーバーレイを削除（スクリーンショットに含めない）
+      const previews = boardClone.querySelectorAll('.preview-overlay');
+      previews.forEach(p => p.remove());
+
       container.appendChild(boardClone);
-      if (statsClone) {
-        container.appendChild(statsClone);
-      }
+      container.appendChild(statsClone);
       document.body.appendChild(container);
 
-      // --- 正方形化ロジック ---
-      // 現在のサイズ（padding込み）を取得
+      // 3. サイズを測定
       const rect = container.getBoundingClientRect();
       const size = Math.max(rect.width, rect.height);
-      // 正方形サイズを適用
+
+      // 4. 正方形に強制（中央揃えを維持）
       container.style.width = size + 'px';
       container.style.height = size + 'px';
-      // ---------------------
 
       // 5. html2canvasでキャプチャ
       const canvas = await html2canvas(container, {
-        backgroundColor: null, // コンテナの背景色を使用
-        scale: 2, // 高解像度
+        backgroundColor: null,
+        scale: 2,
         logging: false,
         useCORS: true
       });
@@ -449,31 +458,38 @@
           btn.textContent = 'Copied!';
         } catch (err) {
           console.error('Clipboard write failed:', err);
-          // Fallback: Secure Context以外ではクリップボード操作がブロックされるため、画像を表示/ダウンロードさせる
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'mutation_plan.png';
-          link.click();
-          URL.revokeObjectURL(url);
-
-          btn.textContent = 'Downloaded';
+          // Fallback: ダウンロード
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'mutation_plan.png';
+            link.click();
+            URL.revokeObjectURL(url);
+            btn.textContent = 'Downloaded';
+          } else {
+            btn.textContent = 'Failed';
+          }
+        } finally {
+          // 確実にクリーンアップ
+          if (container && container.parentNode) {
+            document.body.removeChild(container);
+          }
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.disabled = false;
+          }, 2000);
         }
-
-        // 後始末とボタン復帰
-        document.body.removeChild(container);
-        setTimeout(() => {
-          btn.textContent = originalText;
-          btn.disabled = false;
-        }, 2000);
       });
 
     } catch (err) {
       console.error('Screenshot failed:', err);
       btn.textContent = 'Error';
+
       // エラー時のクリーンアップ
-      const leftover = document.querySelector('div[style*="left: -9999px"]');
-      if (leftover) document.body.removeChild(leftover);
+      if (container && container.parentNode) {
+        document.body.removeChild(container);
+      }
 
       setTimeout(() => {
         btn.textContent = originalText;
@@ -599,11 +615,8 @@
     const boardEl = document.getElementById('board');
     if (!boardEl) return;
 
-    // 既存プレビュー削除
-    if (currentPreview) {
-      if (currentPreview.parentNode) currentPreview.parentNode.removeChild(currentPreview);
-      currentPreview = null;
-    }
+    // 既存プレビュー削除（競合状態を防ぐため最初に実行）
+    clearPreview();
 
     if (state.selectedCardTypeId === null || destroyMode || isMouseDown) return;
 
@@ -640,7 +653,8 @@
     }
 
     // 盤面からはみ出る場合はInvalidスタイル（あるいは表示しない）
-    if (row + size > BOARD_SIZE || col + size > BOARD_SIZE) {
+    const boardSize = window.Game.BOARD_SIZE || 10; // フォールバック
+    if (row + size > boardSize || col + size > boardSize) {
       preview.classList.add('invalid');
     }
 
@@ -713,15 +727,20 @@
         if (targetCell && targetCell.cardTypeId !== undefined) {
           // 同じplacementIdを持つ全てのセルをハイライト
           const pid = targetCell.placementId;
-          const cells = boardEl.querySelectorAll('.cell');
-          cells.forEach(el => {
-            const tr = parseInt(el.dataset.row, 10);
-            const tc = parseInt(el.dataset.col, 10);
-            const tMapCell = state.board[tr][tc];
-            if (tMapCell && tMapCell.placementId === pid) {
-              el.classList.add('will-destroy');
+
+          // state.boardを走査して該当セルを特定（DOMクエリを削減）
+          for (let row = 0; row < state.board.length; row++) {
+            for (let col = 0; col < state.board[row].length; col++) {
+              const cellData = state.board[row][col];
+              if (cellData && cellData.placementId === pid) {
+                // 該当するDOM要素を取得
+                const cellEl = boardEl.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+                if (cellEl) {
+                  cellEl.classList.add('will-destroy');
+                }
+              }
             }
-          });
+          }
         }
         return; // プレビューは表示しない
       }

@@ -498,6 +498,12 @@
   function updateDestroyButton() {
     const btn = document.getElementById('destroyModeBtn');
     btn.classList.toggle('active', destroyMode);
+
+    // ボードにもクラスを付与してカーソル制御などを可能にする
+    const boardEl = document.getElementById('board');
+    if (boardEl) {
+      boardEl.classList.toggle('destroy-mode', destroyMode);
+    }
   }
 
   function updateHistoryButtons() {
@@ -694,17 +700,44 @@
       }
     }, true); // Use capture phase for mouseenter on child elements
     boardEl.addEventListener('mouseover', function (e) {
-      if (isMouseDown) return; // ドラッグ中はプレビューしない
+      if (isMouseDown) return;
       const cell = e.target.closest('.cell');
-      if (cell) {
-        renderPreview(parseInt(cell.dataset.row, 10), parseInt(cell.dataset.col, 10));
+      if (!cell) return;
+
+      const r = parseInt(cell.dataset.row, 10);
+      const c = parseInt(cell.dataset.col, 10);
+
+      // Destroy Mode Highlight
+      if (destroyMode) {
+        const targetCell = state.board[r][c];
+        if (targetCell && targetCell.cardTypeId !== undefined) {
+          // 同じplacementIdを持つ全てのセルをハイライト
+          const pid = targetCell.placementId;
+          const cells = boardEl.querySelectorAll('.cell');
+          cells.forEach(el => {
+            const tr = parseInt(el.dataset.row, 10);
+            const tc = parseInt(el.dataset.col, 10);
+            const tMapCell = state.board[tr][tc];
+            if (tMapCell && tMapCell.placementId === pid) {
+              el.classList.add('will-destroy');
+            }
+          });
+        }
+        return; // プレビューは表示しない
       }
+
+      // Preview
+      renderPreview(r, c);
     });
+
     boardEl.addEventListener('mouseout', function (e) {
       const cell = e.target.closest('.cell');
       if (cell) {
-        // cellから出たとき、relatedTargetがboard外または別のcellならプレビュー更新
-        // renderPreviewは呼ばれるたびに再描画するので、移動時はmouseover配下で処理される
+        // Destroy Mode Highlight Cleanup
+        if (destroyMode) {
+          const cells = boardEl.querySelectorAll('.cell.will-destroy');
+          cells.forEach(el => el.classList.remove('will-destroy'));
+        }
       }
     });
     boardEl.addEventListener('mouseleave', function () {
@@ -721,6 +754,7 @@
 
         if (!existingCell) {
           // 空のセルを右クリック → 破壊モードを起動
+          clearPreview(); // プレビューを消去
           destroyMode = true;
           state.selectedCardTypeId = null;
           updateDestroyButton();

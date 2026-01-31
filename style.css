@@ -555,6 +555,14 @@ img {
   display: block;
 }
 
+/* Destroy Highlight */
+#board.destroy-mode .cell.will-destroy {
+  background: rgba(247, 118, 142, 0.25) !important;
+  z-index: 50;
+}
+
+
+
 /* Dependency Highlighting */
 .card-chip.dependency-highlight {
   border-color: #ff9e64;
@@ -801,4 +809,13 @@ img {
 .preview-overlay.size-3 {
   grid-column: span 3;
   grid-row: span 3;
+}
+
+/* Destroy Mode Cursor */
+.board.destroy-mode .cell {
+  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmNzc2OGUiIHN0cm9rZS13aWR0aD0iMiI+PHBvbHlsaW5lIHBvaW5Rcz0iMyA2IDUgNiAyMSA2Ij48L3BvbHlsaW5lPjxwYXRoIGQ9Ik0xOSA2djE0YTIgMiAwIDAgMS0yIDJIN2EyIDIgMCAwIDEtMi0yVjZtMyAwVjRhMiAyIDAgMCAxIDItMmg0YTIgMiAwIDAgMSAyIDJ2MiI+PC9wYXRoPjxsaW5lIHgxPSIxMCIgeTE9IjExIiB4Mj0iMTAiIHkyPSIxNyI+PC9saW5lPjxsaW5lIHgxPSIxNCIgeTE9IjExIiB4Mj0iMTQiIHkyPSIxNyI+PC9saW5lPjwvc3ZnPg==') 16 16, auto;
+}
+
+.board.destroy-mode .cell:hover {
+  background: rgba(247, 118, 142, 0.1);
 }

@@ -71,10 +71,16 @@
         : '';
       const title = card.name + ' サイズ' + card.size + '×' + card.size + condText;
       const hasScore = scoreVal > 0 ? ' has-score' : '';
+      const imageHtml = card.image
+        ? '<img src="' + card.image + '" alt="' + card.name + '" class="card-image">'
+        : '';
       return '<button type="button" class="card-chip' + hasScore + '" data-card-id="' + card.id + '" title="' + title + '">' +
-        '<span class="size-badge">' + card.size + '×' + card.size + '</span> ' +
-        '<span>' + label + '</span> ' +
-        '<span class="score-num">(' + scoreVal + ')</span>' +
+        '<span class="size-badge">' + card.size + '×' + card.size + '</span>' +
+        imageHtml +
+        '<div class="card-info">' +
+        '<span>' + label + '</span>' +
+        '<span class="score-num">' + scoreVal + '</span>' +
+        '</div>' +
         '</button>';
     }).join('');
 
@@ -117,7 +123,11 @@
           const card = state.cardTypes[cell.cardTypeId];
           const score = cell.isPlayerPlaced ? 0 : card.params[state.scoreParamIndex];
           if (isOrigin) {
-            div.innerHTML = (card.name || ('#' + (cell.cardTypeId + 1))) + '<span class="score-num">' + score + '</span>';
+            if (card.image) {
+              div.innerHTML = '<img src="' + card.image + '" alt="' + card.name + '" class="cell-image"><span class="score-num">' + score + '</span>';
+            } else {
+              div.innerHTML = (card.name || ('#' + (cell.cardTypeId + 1))) + '<span class="score-num">' + score + '</span>';
+            }
           } else {
             div.textContent = '';
           }

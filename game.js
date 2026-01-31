@@ -9,7 +9,7 @@ const BOARD_SIZE = 10;
 function normalizeCard(card, scoreParams, id) {
   const params = scoreParams.map(p => card.scores?.[p] ?? card[p] ?? 0);
   const conditions = card.conditions ?? card.spawnCondition?.conditions ?? [];
-  return { id: id ?? card.id, name: card.name, size: card.size, params, conditions };
+  return { id: id ?? card.id, name: card.name, size: card.size, params, conditions, image: card.image };
 }
 
 // 出現するカードのサイズに応じた「周囲」のマスを返す（盤面外は含まない）

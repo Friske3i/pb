@@ -48,7 +48,8 @@
         "wart": 0,
         "mush": 100,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Brown_Mushroom.webp"
     },
     {
       "id": 1,
@@ -68,7 +69,8 @@
         "wart": 0,
         "mush": 100,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Red_Mushroom.webp"
     },
     {
       "id": 2,
@@ -88,7 +90,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Cactus.webp"
     },
     {
       "id": 3,
@@ -108,7 +111,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Carrot.webp"
     },
     {
       "id": 4,
@@ -128,7 +132,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 100
-      }
+      },
+      "image": "assets/Cocoa_Beans.webp"
     },
     {
       "id": 5,
@@ -148,7 +153,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Melon_Slice.webp"
     },
     {
       "id": 6,
@@ -168,7 +174,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Pumpkin.webp"
     },
     {
       "id": 7,
@@ -188,7 +195,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Wheat.webp"
     },
     {
       "id": 8,
@@ -208,7 +216,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Potato.webp"
     },
     {
       "id": 9,
@@ -228,7 +237,8 @@
         "wart": 100,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Nether_Wart.webp"
     },
     {
       "id": 10,
@@ -248,7 +258,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Rose_Bush.webp"
     },
     {
       "id": 11,
@@ -268,7 +279,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Sunflower.webp"
     },
     {
       "id": 12,
@@ -288,7 +300,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Blue_Orchid.webp"
     },
     {
       "id": 13,
@@ -308,7 +321,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Sugar_Cane.webp"
     },
     {
       "id": 14,
@@ -328,7 +342,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Dead_Bush.webp"
     },
     {
       "id": 15,
@@ -348,7 +363,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Fire.gif"
     },
     {
       "id": 16,
@@ -378,7 +394,8 @@
         "wart": 720,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Ashwreath.webp"
     },
     {
       "id": 17,
@@ -404,7 +421,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 400
-      }
+      },
+      "image": "assets/Choconut.webp"
     },
     {
       "id": 18,
@@ -430,7 +448,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Dustgrain.webp"
     },
     {
       "id": 19,
@@ -460,7 +479,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Gloomgourd.webp"
     },
     {
       "id": 20,
@@ -480,7 +500,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Lonelily.webp"
     },
     {
       "id": 21,
@@ -510,7 +531,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Scourroot.webp"
     },
     {
       "id": 22,
@@ -540,7 +562,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Shadevine.webp"
     },
     {
       "id": 23,
@@ -570,7 +593,8 @@
         "wart": 0,
         "mush": 132,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Veilshroom.webp"
     },
     {
       "id": 24,
@@ -596,7 +620,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Witherbloom.webp"
     },
     {
       "id": 25,
@@ -626,7 +651,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 400
-      }
+      },
+      "image": "assets/Chocoberry.webp"
     },
     {
       "id": 26,
@@ -656,7 +682,8 @@
         "wart": 1200,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Cindershade.webp"
     },
     {
       "id": 27,
@@ -686,7 +713,8 @@
         "wart": 600,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Coalroot.webp"
     },
     {
       "id": 28,
@@ -712,7 +740,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 1600
-      }
+      },
+      "image": "assets/Creambloom.webp"
     },
     {
       "id": 29,
@@ -750,7 +779,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Duskbloom.webp"
     },
     {
       "id": 30,
@@ -780,7 +810,8 @@
         "wart": 0,
         "mush": 380,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Thornshade.webp"
     },
     {
       "id": 31,
@@ -810,7 +841,8 @@
         "wart": 1800,
         "mush": 0,
         "cocoa": 1200
-      }
+      },
+      "image": "assets/Blastberry.webp"
     },
     {
       "id": 32,
@@ -830,7 +862,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Fermento.webp"
     },
     {
       "id": 33,
@@ -860,7 +893,8 @@
         "wart": 0,
         "mush": 380,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Cheesebite.webp"
     },
     {
       "id": 34,
@@ -890,7 +924,8 @@
         "wart": 0,
         "mush": 190,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Chloronite.webp"
     },
     {
       "id": 35,
@@ -920,7 +955,8 @@
         "wart": 0,
         "mush": 760,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Do-not-eat-shroom.webp"
     },
     {
       "id": 36,
@@ -950,7 +986,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Fleshtrap.webp"
     },
     {
       "id": 37,
@@ -980,7 +1017,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Magic_Jellybean.webp"
     },
     {
       "id": 38,
@@ -1010,7 +1048,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Noctilume.webp"
     },
     {
       "id": 39,
@@ -1052,7 +1091,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Snoozling.webp"
     },
     {
       "id": 40,
@@ -1078,7 +1118,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Soggybud.webp"
     },
     {
       "id": 41,
@@ -1108,7 +1149,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Chorus_Fruit.webp"
     },
     {
       "id": 42,
@@ -1138,7 +1180,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/PlantBoy_Advance.webp"
     },
     {
       "id": 43,
@@ -1168,7 +1211,8 @@
         "wart": 0,
         "mush": 1330,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Puffercloud.webp"
     },
     {
       "id": 44,
@@ -1188,7 +1232,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 2000
-      }
+      },
+      "image": "assets/Shellfruit.webp"
     },
     {
       "id": 45,
@@ -1218,7 +1263,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Startlevine.webp"
     },
     {
       "id": 46,
@@ -1248,7 +1294,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Stoplight_Petal.webp"
     },
     {
       "id": 47,
@@ -1278,7 +1325,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Thunderling.webp"
     },
     {
       "id": 48,
@@ -1308,7 +1356,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Turtlellini.webp"
     },
     {
       "id": 49,
@@ -1342,7 +1391,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Zombud.webp"
     },
     {
       "id": 50,
@@ -1372,7 +1422,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/All-in_Aloe.webp"
     },
     {
       "id": 51,
@@ -1392,7 +1443,8 @@
         "wart": 738,
         "mush": 234,
         "cocoa": 492
-      }
+      },
+      "image": "assets/Godseed.webp"
     },
     {
       "id": 52,
@@ -1412,7 +1464,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Jerryflower.webp"
     },
     {
       "id": 53,
@@ -1442,7 +1495,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Phantomleaf.webp"
     },
     {
       "id": 54,
@@ -1476,7 +1530,8 @@
         "wart": 0,
         "mush": 0,
         "cocoa": 0
-      }
+      },
+      "image": "assets/Timestalk.webp"
     }
   ]
 }

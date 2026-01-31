@@ -406,35 +406,44 @@ body {
   height: 90%;
   object-fit: contain;
   margin-bottom: 2px;
+  position: relative;
+  z-index: 1;
 }
 
-.cell .score-num {
-  color: var(--score);
-  margin-left: 2px;
-  font-size: 0.7rem;
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 1px 3px;
-  border-radius: 3px;
-}
+/* .cell .score-num removed */
 
 .cell.empty:hover {
   background: #2d3047;
   box-shadow: inset 0 0 0 2px var(--accent);
 }
 
+.cell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 2;
+}
+
 .cell.player {
-  background: rgba(187, 154, 247, 0.25);
+  background: rgba(187, 154, 247, 0.1);
   border: 1px solid var(--player);
   color: var(--player);
 }
 
+.cell.player::after {
+  background: rgba(187, 154, 247, 0.15);
+}
+
 .cell.spawn {
-  background: rgba(125, 207, 255, 0.2);
+  background: rgba(125, 207, 255, 0.1);
   border: 1px solid var(--spawn);
   color: var(--spawn);
+}
+
+.cell.spawn::after {
+  background: rgba(125, 207, 255, 0.15);
 }
 
 .cell.size-2 {
@@ -453,4 +462,80 @@ body {
 
 .cell.player .score-num {
   color: var(--muted);
+}
+
+/* Custom Tooltip */
+.tooltip {
+  position: fixed;
+  pointer-events: none;
+  background: rgba(22, 22, 30, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  display: none;
+  min-width: 200px;
+  backdrop-filter: blur(4px);
+  transform: translate(10px, 10px);
+}
+
+.tooltip.visible {
+  display: block;
+  animation: fadeIn 0.1s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(10px, 15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(10px, 10px);
+  }
+}
+
+.tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-title {
+  font-weight: 700;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.tooltip-score {
+  font-weight: 700;
+  color: var(--score);
+}
+
+.tooltip-body {
+  font-size: 0.85rem;
+  color: #a0a8c0;
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.tooltip-conditions {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.8rem;
+}
+
+.condition-item {
+  color: #7aa2f7;
+  display: block;
 }

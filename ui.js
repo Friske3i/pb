@@ -73,18 +73,25 @@
     list.innerHTML = sortedTypes.map((card) => {
       const scoreVal = card.params[scoreParamIndex];
       const label = card.name || ('#' + (card.id + 1));
-      const condText = (card.conditions && card.conditions.length)
-        ? '\nSpawn: ' + card.conditions.map(function (c) {
-          const name = idToName[c.id] || ('#' + c.id);
-          return name + ' x' + c.amount;
-        }).join(', ')
+
+      // Store tooltip data in dataset
+      const conditionsStr = (card.conditions && card.conditions.length)
+        ? JSON.stringify(card.conditions.map(c => ({
+          name: idToName[c.id] || ('#' + c.id),
+          amount: c.amount
+        })))
         : '';
-      const title = card.name + ' (' + card.size + 'x' + card.size + ')' + condText;
+
       const hasScore = scoreVal > 0 ? ' has-score' : '';
       const imageHtml = card.image
         ? '<img src="' + card.image + '" alt="' + card.name + '" class="card-image">'
         : '';
-      return '<button type="button" class="card-chip' + hasScore + '" data-card-id="' + card.id + '" title="' + title + '">' +
+
+      return '<button type="button" class="card-chip' + hasScore + '" data-card-id="' + card.id + '" ' +
+        'data-tooltip-title="' + label + '" ' +
+        'data-tooltip-size="' + card.size + '×' + card.size + '" ' +
+        'data-tooltip-score="' + scoreVal + '" ' +
+        'data-tooltip-conditions=\'' + conditionsStr + '\'>' +
         '<span class="size-badge">' + card.size + '×' + card.size + '</span>' +
         '<span class="score-num">' + scoreVal + '</span>' +
         imageHtml +
@@ -96,6 +103,9 @@
 
     list.querySelectorAll('.card-chip').forEach(function (btn) {
       btn.addEventListener('click', function () { selectCard(parseInt(btn.dataset.cardId, 10)); });
+      btn.addEventListener('mouseenter', showTooltip);
+      btn.addEventListener('mousemove', moveTooltip);
+      btn.addEventListener('mouseleave', hideTooltip);
     });
   }
 
@@ -133,11 +143,39 @@
           const card = state.cardTypes[cell.cardTypeId];
           const score = cell.isPlayerPlaced ? 0 : card.params[state.scoreParamIndex];
           if (isOrigin) {
-            if (card.image) {
-              div.innerHTML = '<img src="' + card.image + '" alt="' + card.name + '" class="cell-image"><span class="score-num">' + score + '</span>';
-            } else {
-              div.innerHTML = (card.name || ('#' + (cell.cardTypeId + 1))) + '<span class="score-num">' + score + '</span>';
+            div.dataset.tooltipTitle = card.name || ('#' + (cell.cardTypeId + 1));
+            div.dataset.tooltipScore = score;
+            div.dataset.tooltipSize = card.size + '×' + card.size;
+
+            // Add conditions for tooltip
+            if (card.conditions && card.conditions.length) {
+              // Note: need access to idToName or recreate it here, or store it in state
+              // For now, let's keep it simple or access it if we can. 
+              // Since renderBoard is separate, we'll reconstruct basic name lookup or just show ID
+              // Better approach: pass idToName to renderBoard or store in state
+              // For simplicity in this edit, we'll map ids as best we can or just use IDs
+
+              // Let's rely on Game.getCardTypes(state) to get names
+              const allParams = window.Game.getCardTypes(state);
+              const nameMap = {};
+              allParams.forEach(p => nameMap[p.id] = p.name);
+
+              const conditionsStr = JSON.stringify(card.conditions.map(c => ({
+                name: nameMap[c.id] || ('#' + c.id),
+                amount: c.amount
+              })));
+              div.dataset.tooltipConditions = conditionsStr;
             }
+
+            if (card.image) {
+              div.innerHTML = '<img src="' + card.image + '" alt="' + card.name + '" class="cell-image">';
+            } else {
+              div.innerHTML = (card.name || ('#' + (cell.cardTypeId + 1)));
+            }
+
+            div.addEventListener('mouseenter', showTooltip);
+            div.addEventListener('mousemove', moveTooltip);
+            div.addEventListener('mouseleave', hideTooltip);
           } else {
             div.textContent = '';
           }
@@ -179,6 +217,72 @@
   function updateDestroyButton() {
     const btn = document.getElementById('destroyModeBtn');
     btn.classList.toggle('active', destroyMode);
+  }
+
+  // Tooltip Logic
+  function showTooltip(e) {
+    const tooltip = document.getElementById('tooltip');
+    const target = e.currentTarget;
+    const title = target.dataset.tooltipTitle;
+    const score = target.dataset.tooltipScore;
+    const size = target.dataset.tooltipSize;
+    const conditions = target.dataset.tooltipConditions ? JSON.parse(target.dataset.tooltipConditions) : [];
+
+    if (!title) return;
+
+    let html = `
+      <div class="tooltip-header">
+        <span class="tooltip-title">${title}</span>
+        <span class="tooltip-score">Score: ${score}</span>
+      </div>
+      <div class="tooltip-body">
+        <div class="tooltip-row">
+          <span>Size:</span>
+          <span>${size}</span>
+        </div>
+    `;
+
+    if (conditions.length > 0) {
+      html += `
+        <div class="tooltip-conditions">
+          <div>Spawn Requirements:</div>
+          ${conditions.map(c => `<span class="condition-item">• ${c.name} x${c.amount}</span>`).join('')}
+        </div>
+      `;
+    }
+
+    html += `</div>`;
+    tooltip.innerHTML = html;
+    tooltip.classList.add('visible');
+    moveTooltip(e);
+  }
+
+  function moveTooltip(e) {
+    const tooltip = document.getElementById('tooltip');
+    if (!tooltip.classList.contains('visible')) return;
+
+    // Position tooltip near mouse but prevent overflow
+    const x = e.clientX + 15;
+    const y = e.clientY + 15;
+
+    // Check window bounds
+    const rect = tooltip.getBoundingClientRect();
+    const winW = window.innerWidth;
+    const winH = window.innerHeight;
+
+    let finalX = x;
+    let finalY = y;
+
+    if (x + rect.width > winW) finalX = e.clientX - rect.width - 10;
+    if (y + rect.height > winH) finalY = e.clientY - rect.height - 10;
+
+    tooltip.style.left = finalX + 'px';
+    tooltip.style.top = finalY + 'px';
+  }
+
+  function hideTooltip() {
+    const tooltip = document.getElementById('tooltip');
+    tooltip.classList.remove('visible');
   }
 
   function bindEvents() {

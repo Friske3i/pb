@@ -1591,7 +1591,8 @@
       },
       "image": "assets/Glasscorn.webp",
       "category": "mutated",
-      "maxGrowthStage": 9
+      "maxGrowthStage": 9,
+      "specialEffect": "glasscorn"
     },
     {
       "id": 53,

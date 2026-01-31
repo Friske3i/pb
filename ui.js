@@ -235,6 +235,7 @@
               div.dataset.tooltipMaxGrowthStage = (card.maxGrowthStage !== undefined) ? card.maxGrowthStage : 1;
               div.dataset.tooltipIsPlayerPlaced = cell.isPlayerPlaced;
               div.dataset.tooltipCategory = card.category;
+              div.dataset.tooltipSpecialEffect = card.specialEffect;
             }
 
             // Add conditions for tooltip
@@ -268,7 +269,13 @@
               const growthStage = cell.growthStage !== undefined ? cell.growthStage : 0;
               const maxGrowthStage = card.maxGrowthStage !== undefined ? card.maxGrowthStage : 1;
               // maxGrowthStage=0の場合は常にfully grown、それ以外はgrowthStage >= maxGrowthStage
-              const isFullyGrown = (maxGrowthStage === 0) || (growthStage >= maxGrowthStage);
+              // 特例: Glasscornは7,8で完了
+              let isFullyGrown;
+              if (card.specialEffect === 'glasscorn') {
+                isFullyGrown = (growthStage === 7 || growthStage === 8);
+              } else {
+                isFullyGrown = (maxGrowthStage === 0) || (growthStage >= maxGrowthStage);
+              }
 
               // 成長段階のクラスを追加
               if (isFullyGrown) {
@@ -626,12 +633,18 @@
     const maxGrowthStage = target.dataset.tooltipMaxGrowthStage;
     const isPlayerPlaced = target.dataset.tooltipIsPlayerPlaced;
     const category = target.dataset.tooltipCategory;
+    const specialEffect = target.dataset.tooltipSpecialEffect;
 
     if (state.simulationMode && growthStage !== undefined && maxGrowthStage) {
       const stage = parseInt(growthStage, 10);
       const maxStage = parseInt(maxGrowthStage, 10);
       // maxGrowthStage=0の場合は常にfully grown、それ以外はstage >= maxStage
-      const isFullyGrown = (maxStage === 0) || (stage >= maxStage);
+      let isFullyGrown;
+      if (specialEffect === 'glasscorn') {
+        isFullyGrown = (stage === 7 || stage === 8);
+      } else {
+        isFullyGrown = (maxStage === 0) || (stage >= maxStage);
+      }
       const statusText = isFullyGrown ? ' (Fully Grown)' : '';
 
       // プレイヤー設置のmutatedには(uncollectable)を追加

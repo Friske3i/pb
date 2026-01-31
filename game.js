@@ -19,7 +19,8 @@ function normalizeCard(card, scoreParams, id) {
     conditions,
     image: card.image,
     category,
-    maxGrowthStage
+    maxGrowthStage,
+    specialEffect: card.specialEffect
   };
 }
 
@@ -139,8 +140,12 @@ function calculateScore(state) {
       // シミュレーションモードがオンの場合: プレイヤー設置のmutatedのみスコア0（uncollectable）
       if (state.simulationMode && cell.isPlayerPlaced && card.category === 'mutated') continue;
 
-      // 成長段階チェック: 成長完了していなければスコア0（maxGrowthStage=0は常に完了、それ以外はmaxGrowthStageで完了）
-      if (card.maxGrowthStage > 0 && cell.growthStage < card.maxGrowthStage) continue;
+      // 成長段階チェック: Glasscornは7,8で完了扱い
+      if (card.specialEffect === 'glasscorn') {
+        if (cell.growthStage !== 7 && cell.growthStage !== 8) continue;
+      } else {
+        if (card.maxGrowthStage > 0 && cell.growthStage < card.maxGrowthStage) continue;
+      }
 
       // 成長完了したMutationはスコアを持つ
       total += card.params[state.scoreParamIndex] ?? 0;
@@ -234,9 +239,18 @@ function progress(state) {
         const cell = state.board[r][c];
         if (cell) {
           const card = state.cardTypes[cell.cardTypeId];
-          // 成長段階が最大値未満なら1増やす（0からmaxGrowthStageまで）
-          if (cell.growthStage < card.maxGrowthStage) {
-            cell.growthStage++;
+          // Glasscorn: maxGrowthStage (9) まで育ち、次は1に戻る
+          if (card.specialEffect === 'glasscorn') {
+            if (cell.growthStage >= card.maxGrowthStage - 1) {
+              cell.growthStage = 1;
+            } else {
+              cell.growthStage++;
+            }
+          } else {
+            // 通常: 成長段階が最大値未満なら1増やす
+            if (cell.growthStage < card.maxGrowthStage) {
+              cell.growthStage++;
+            }
           }
         }
       }

@@ -2,6 +2,7 @@
   const BOARD_SIZE = window.Game.BOARD_SIZE;
   let state = null;
   let destroyMode = false;
+  let searchQuery = '';
 
   function init() {
     window.Game.loadConfig()
@@ -61,6 +62,8 @@
     // スコア順にソート（降順）
     const sortedTypes = types.slice().sort((a, b) => {
       return b.params[scoreParamIndex] - a.params[scoreParamIndex];
+    }).filter(card => {
+      return !searchQuery || (card.name && card.name.toLowerCase().includes(searchQuery.toLowerCase()));
     });
 
     list.innerHTML = sortedTypes.map((card) => {
@@ -176,6 +179,12 @@
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
     document.getElementById('clearAllBtn').addEventListener('click', clearAll);
     document.getElementById('scoreParamSelector').addEventListener('change', onScoreParamChange);
+    document.getElementById('mutationSearch').addEventListener('input', onSearchInput);
+  }
+
+  function onSearchInput(e) {
+    searchQuery = e.target.value;
+    renderCardList();
   }
 
   function clearAll() {

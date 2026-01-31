@@ -66,13 +66,20 @@
       return !searchQuery || (card.name && card.name.toLowerCase().includes(searchQuery.toLowerCase()));
     });
 
+    // Create ID map for name lookup
+    const idToName = {};
+    types.forEach(function (t) { idToName[t.id] = t.name; });
+
     list.innerHTML = sortedTypes.map((card) => {
       const scoreVal = card.params[scoreParamIndex];
       const label = card.name || ('#' + (card.id + 1));
       const condText = (card.conditions && card.conditions.length)
-        ? ' 出現: ' + card.conditions.map(function (c) { return 'id' + c.id + 'が' + c.amount + '枚以上'; }).join(' かつ ')
+        ? '\nSpawn: ' + card.conditions.map(function (c) {
+          const name = idToName[c.id] || ('#' + c.id);
+          return name + ' x' + c.amount;
+        }).join(', ')
         : '';
-      const title = card.name + ' サイズ' + card.size + '×' + card.size + condText;
+      const title = card.name + ' (' + card.size + 'x' + card.size + ')' + condText;
       const hasScore = scoreVal > 0 ? ' has-score' : '';
       const imageHtml = card.image
         ? '<img src="' + card.image + '" alt="' + card.name + '" class="card-image">'

@@ -663,49 +663,50 @@ img {
   left: 0;
   z-index: 1;
 }
+
 /* Mutation Statistics */
 /* Mutation Statistics */
 .mutation-stats {
-    margin-top: 16px;
-    padding: 12px;
-    background: #23232e;
-    border: 1px solid #3a3a4a;
-    border-radius: 6px;
-    font-size: 0.85rem;
+  margin-top: 16px;
+  padding: 12px;
+  background: #23232e;
+  border: 1px solid #3a3a4a;
+  border-radius: 6px;
+  font-size: 0.85rem;
 }
 
 .mutation-stats h3 {
-    margin: 0 0 8px 0;
-    font-size: 0.9rem;
-    color: #a0a8c0;
-    font-weight: 600;
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: #a0a8c0;
+  font-weight: 600;
 }
 
 .mutation-stats-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .mutation-stat-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 8px;
-    background: #2d2d3a;
-    border: 1px solid #4a4a5e;
-    border-radius: 4px;
-    font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  background: #2d2d3a;
+  border: 1px solid #4a4a5e;
+  border-radius: 4px;
+  font-size: 0.8rem;
 }
 
 .mutation-stat-item .name {
-    color: #e1e4ed;
-    font-weight: 500;
+  color: #e1e4ed;
+  font-weight: 500;
 }
 
 .mutation-stat-item .count {
-    color: #7dd3fc;
-    font-weight: 600;
+  color: #7dd3fc;
+  font-weight: 600;
 }
 
 

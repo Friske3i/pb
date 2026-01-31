@@ -257,7 +257,15 @@
 
   function renderMutationStats() {
     const statsEl = document.getElementById('mutationStats');
+    const boardEl = document.getElementById('board');
+    if (!statsEl) return;
 
+    // 盤面の幅に合わせる
+    if (boardEl) {
+      statsEl.style.width = boardEl.offsetWidth + 'px';
+      statsEl.style.maxWidth = '100%'; // はみ出し防止
+      statsEl.style.boxSizing = 'border-box'; // パディングを含めて幅を計算
+    }
     // 各mutationの配置数をカウント
     const mutationCounts = {};
     const processedPlacements = new Set();
@@ -362,6 +370,114 @@
     }
   }
 
+
+  async function onCopyImageClick() {
+    const btn = document.getElementById('copyImageBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'Capturing...';
+    btn.disabled = true;
+
+    try {
+      // 1. 画面外に専用コンテナを作成
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.top = '0';
+      container.style.left = '-9999px';
+      // コンテナ自体は中身にフィットさせる（初期状態）
+      container.style.width = 'fit-content';
+      container.style.height = 'fit-content';
+      container.style.display = 'flex';
+      container.style.flexDirection = 'column';
+      container.style.alignItems = 'center'; // 横方向中央揃え
+      container.style.justifyContent = 'center'; // 縦方向中央揃え
+      container.style.backgroundColor = '#1e1e24';
+      container.style.padding = '40px'; // 余白を大きく
+      container.style.borderRadius = '12px';
+      // 余計なスタイルをリセット
+      container.style.boxSizing = 'border-box';
+      container.style.margin = '0';
+
+      // 2. 盤面をクローンして調整
+      const originalBoard = document.getElementById('board');
+      const boardClone = originalBoard.cloneNode(true);
+      // 盤面のスタイルを強制上書き
+      boardClone.style.margin = '0';
+      boardClone.style.boxShadow = 'none';
+      // グリッドのサイズを保持するために明示的に幅を指定
+      boardClone.style.width = originalBoard.offsetWidth + 'px';
+      boardClone.style.height = originalBoard.offsetHeight + 'px';
+      boardClone.style.flex = 'none'; // flexアイテムとしての伸縮を防ぐ
+
+      // 3. 統計をクローンして調整
+      const originalStats = document.getElementById('mutationStats');
+      let statsClone = null;
+      if (originalStats) {
+        statsClone = originalStats.cloneNode(true);
+        statsClone.style.margin = '16px 0 0 0'; // 上に少し隙間、他は0
+        statsClone.style.width = originalBoard.offsetWidth + 'px'; // 盤面と同じ幅に
+        statsClone.style.maxWidth = 'none';
+        statsClone.style.boxSizing = 'border-box';
+        statsClone.style.flex = 'none';
+      }
+
+      // 4. コンテナに追加
+      container.appendChild(boardClone);
+      if (statsClone) {
+        container.appendChild(statsClone);
+      }
+      document.body.appendChild(container);
+
+      // --- 正方形化ロジック ---
+      // 現在のサイズ（padding込み）を取得
+      const rect = container.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      // 正方形サイズを適用
+      container.style.width = size + 'px';
+      container.style.height = size + 'px';
+      // ---------------------
+
+      // 5. html2canvasでキャプチャ
+      const canvas = await html2canvas(container, {
+        backgroundColor: null, // コンテナの背景色を使用
+        scale: 2, // 高解像度
+        logging: false,
+        useCORS: true
+      });
+
+      // 6. クリップボードにコピー
+      canvas.toBlob(async (blob) => {
+        try {
+          if (!blob) throw new Error('Blob creation failed');
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          btn.textContent = 'Copied!';
+        } catch (err) {
+          console.error('Clipboard write failed:', err);
+          btn.textContent = 'Failed';
+        }
+
+        // 後始末とボタン復帰
+        document.body.removeChild(container);
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }, 2000);
+      });
+
+    } catch (err) {
+      console.error('Screenshot failed:', err);
+      btn.textContent = 'Error';
+      // エラー時のクリーンアップ
+      const leftover = document.querySelector('div[style*="left: -9999px"]');
+      if (leftover) document.body.removeChild(leftover);
+
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }, 2000);
+    }
+  }
   function onProgressClick() {
     window.Game.progress(state);
     // 履歴を保存（実行後）
@@ -484,6 +600,7 @@
       lastProcessedCell = null;
     });
     document.getElementById('progressBtn').addEventListener('click', onProgressClick);
+    document.getElementById('copyImageBtn').addEventListener('click', onCopyImageClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
     document.getElementById('clearAllBtn').addEventListener('click', clearAll);
     document.getElementById('undoBtn').addEventListener('click', onUndo);

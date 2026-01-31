@@ -154,7 +154,7 @@
 
   function updateDestroyButton() {
     const btn = document.getElementById('destroyModeBtn');
-    btn.textContent = destroyMode ? '破壊モード ON' : '破壊モード';
+    btn.textContent = destroyMode ? 'Destroy Mode ON' : 'Destroy Mode';
     btn.classList.toggle('active', destroyMode);
   }
 

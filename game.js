@@ -91,7 +91,7 @@ function createEmptyBoard() {
 function createGameState(config) {
   const scoreParams = config.scoreParams || [];
   const cardTypes = (config.cards || []).map((card, i) => normalizeCard(card, scoreParams, i));
-  const scoreParamIndex = Math.floor(Math.random() * Math.max(1, scoreParams.length));
+  const scoreParamIndex = 0; // Wheat固定
   return {
     board: createEmptyBoard(),
     cardTypes,

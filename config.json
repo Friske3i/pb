@@ -14,6 +14,21 @@
     "mush",
     "cocoa"
   ],
+  "scoreParamNames": {
+    "wheat": "Wheat",
+    "carrot": "Carrot",
+    "potato": "Potato",
+    "cactus": "Cactus",
+    "pumpkin": "Pumpkin",
+    "melon": "Melon Slice",
+    "rose": "Wild Rose",
+    "sun": "Sunflower",
+    "moon": "Moonflower",
+    "cane": "Sugarcane",
+    "wart": "Nether Wart",
+    "mush": "Mushroom",
+    "cocoa": "Cocoa Beans"
+  },
   "cards": [
     {
       "id": 0,

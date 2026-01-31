@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mutation Planner</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="app">
     <header class="header">
       <h1>Mutation Planner</h1>
       <div class="score-row">
-        <span class="score-label">スコアパラメータ: <strong id="scoreParamName">—</strong></span>
-        <span class="score-value">得点: <strong id="scoreValue">0</strong></span>
+        <span class="score-label">Crop:
+          <select id="scoreParamSelector" class="score-selector">
+            <!-- 動的に生成 -->
+          </select>
+        </span>
+        <span class="score-value">Base Yield: <strong id="scoreValue">0</strong></span>
       </div>
     </header>
 
     <main class="main">
       <aside class="sidebar">
         <section class="panel">
-          <h2>カードを設置</h2>
-          <p class="hint">置くカードを選び、盤面のマスをクリックで設置。設置したカードは0点。</p>
+          <h2>Select Mutations</h2>
+          <p class="hint">Mutationを選び、盤面のマスをクリックで設置してください。自分で設置したMutationは0点判定になります。</p>
           <div id="cardList" class="card-list"></div>
         </section>
         <section class="panel">
-          <button type="button" id="progressBtn" class="btn progress-btn">進行ボタン</button>
-          <p class="hint" id="spawnConditionHint">空地で条件を満たすマスに、ランダムなカードが出現（点数あり）。</p>
+          <button type="button" id="progressBtn" class="btn progress-btn">Next Stage</button>
+          <p class="hint" id="spawnConditionHint">Stageを進めます。条件が満たされていればMutationが発生します。</p>
         </section>
         <section class="panel">
           <button type="button" id="destroyModeBtn" class="btn destroy-btn">破壊モード</button>
@@ -42,4 +48,5 @@
   <script src="game.js"></script>
   <script src="ui.js"></script>
 </body>
+
 </html>

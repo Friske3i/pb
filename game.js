@@ -98,6 +98,7 @@ function createGameState(config) {
     scoreParamIndex,
     scoreParamName: scoreParams[scoreParamIndex] || '—',
     scoreParams,
+    scoreParamNames: config.scoreParamNames || {},
     selectedCardTypeId: null,
     placementIdCounter: 0
   };

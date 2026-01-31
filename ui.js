@@ -17,7 +17,7 @@
   }
 
   function renderAll() {
-    renderScoreParam();
+    renderScoreParamSelector();
     renderScore();
     renderSpawnHint();
     renderCardList();
@@ -25,9 +25,22 @@
     updateDestroyButton();
   }
 
-  function renderScoreParam() {
-    const { name } = window.Game.getScoreParam(state);
-    document.getElementById('scoreParamName').textContent = name;
+  function renderScoreParamSelector() {
+    const selector = document.getElementById('scoreParamSelector');
+    const { index: currentIndex } = window.Game.getScoreParam(state);
+
+    // 初回のみオプションを生成
+    if (selector.options.length === 0) {
+      const paramNames = state.scoreParamNames || {};
+      state.scoreParams.forEach((param, i) => {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = paramNames[param] || param;
+        selector.appendChild(option);
+      });
+    }
+
+    selector.value = currentIndex;
   }
 
   function renderScore() {
@@ -44,14 +57,21 @@
     const list = document.getElementById('cardList');
     const types = window.Game.getCardTypes(state);
     const { index: scoreParamIndex } = window.Game.getScoreParam(state);
-    list.innerHTML = types.map((card) => {
+
+    // スコア順にソート（降順）
+    const sortedTypes = types.slice().sort((a, b) => {
+      return b.params[scoreParamIndex] - a.params[scoreParamIndex];
+    });
+
+    list.innerHTML = sortedTypes.map((card) => {
       const scoreVal = card.params[scoreParamIndex];
       const label = card.name || ('#' + (card.id + 1));
       const condText = (card.conditions && card.conditions.length)
-        ? ' 出現: ' + card.conditions.map(function (c) { return 'id' + c.id + 'が' + c.amount + '枚以上'; }).join(' または ')
+        ? ' 出現: ' + card.conditions.map(function (c) { return 'id' + c.id + 'が' + c.amount + '枚以上'; }).join(' かつ ')
         : '';
       const title = card.name + ' サイズ' + card.size + '×' + card.size + condText;
-      return '<button type="button" class="card-chip" data-card-id="' + card.id + '" title="' + title + '">' +
+      const hasScore = scoreVal > 0 ? ' has-score' : '';
+      return '<button type="button" class="card-chip' + hasScore + '" data-card-id="' + card.id + '" title="' + title + '">' +
         '<span class="size-badge">' + card.size + '×' + card.size + '</span> ' +
         '<span>' + label + '</span> ' +
         '<span class="score-num">(' + scoreVal + ')</span>' +
@@ -141,6 +161,14 @@
   function bindEvents() {
     document.getElementById('progressBtn').addEventListener('click', onProgressClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
+    document.getElementById('scoreParamSelector').addEventListener('change', onScoreParamChange);
+  }
+
+  function onScoreParamChange(e) {
+    const newIndex = parseInt(e.target.value, 10);
+    state.scoreParamIndex = newIndex;
+    state.scoreParamName = state.scoreParams[newIndex];
+    renderAll();
   }
 
   init();

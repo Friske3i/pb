@@ -9,7 +9,7 @@
   --score: #9ece6a;
   --player: #bb9af7;
   --spawn: #7dcfff;
-  --cell-size: 36px;
+  --cell-size: 50px;
 }
 
 * {
@@ -46,8 +46,32 @@ body {
   align-items: center;
 }
 
-.score-label strong {
+.score-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.score-selector {
+  background: var(--surface);
   color: var(--accent);
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.score-selector:hover {
+  border-color: var(--accent);
+}
+
+.score-selector:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.2);
 }
 
 .score-value strong {
@@ -110,16 +134,32 @@ body {
   transition: border-color 0.15s, background 0.15s, transform 0.1s;
 }
 
+.card-chip.has-score {
+  border-color: var(--score);
+  background: rgba(158, 206, 106, 0.1);
+}
+
 .card-chip:hover {
   border-color: var(--accent);
   background: rgba(122, 162, 247, 0.1);
   transform: translateY(-2px);
 }
 
+.card-chip.has-score:hover {
+  border-color: var(--score);
+  background: rgba(158, 206, 106, 0.15);
+}
+
 .card-chip.selected {
   border-color: var(--accent);
   background: rgba(122, 162, 247, 0.2);
   box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.3);
+}
+
+.card-chip.has-score.selected {
+  border-color: var(--score);
+  background: rgba(158, 206, 106, 0.25);
+  box-shadow: 0 0 0 2px rgba(158, 206, 106, 0.3);
 }
 
 .card-chip .size-badge {
@@ -204,7 +244,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.1s, box-shadow 0.1s;
@@ -228,16 +268,17 @@ body {
 }
 
 .cell.size-2 {
-  font-size: 0.6rem;
+  font-size: 0.75rem;
 }
 
 .cell.size-3 {
-  font-size: 0.5rem;
+  font-size: 0.65rem;
 }
 
 .cell .score-num {
   color: var(--score);
-  margin-left: 1px;
+  margin-left: 2px;
+  font-size: 0.9rem;
 }
 
 .cell.player .score-num {

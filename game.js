@@ -126,7 +126,28 @@ function placeCard(state, row, col, cardTypeId) {
   const card = state.cardTypes[cardTypeId];
   if (!card) return false;
   const size = card.size;
-  if (!isAreaEmpty(state.board, row, col, size)) return false;
+
+  // 範囲チェック（盤面外には置けない）
+  if (row < 0 || row + size > BOARD_SIZE || col < 0 || col + size > BOARD_SIZE) {
+    return false;
+  }
+
+  // 重なる既存カードを収集
+  const overlapping = [];
+  for (let r = row; r < row + size; r++) {
+    for (let c = col; c < col + size; c++) {
+      const cell = state.board[r][c];
+      if (cell) {
+        if (!overlapping.some(item => item.row === cell.originRow && item.col === cell.originCol)) {
+          overlapping.push({ row: cell.originRow, col: cell.originCol });
+        }
+      }
+    }
+  }
+
+  // 重なるカードを削除
+  overlapping.forEach(pos => destroyCard(state, pos.row, pos.col));
+
   const placementId = state.placementIdCounter++;
   for (let r = row; r < row + size; r++) {
     for (let c = col; c < col + size; c++) {

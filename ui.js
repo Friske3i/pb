@@ -4,6 +4,7 @@
   let destroyMode = false;
   let searchQuery = '';
   let dependencyHighlightId = null;
+  let lastScrollTop = 0;
 
   function init() {
     window.Game.loadConfig()
@@ -110,9 +111,11 @@
 
       // 依存関係ハイライト
       if (dependencyHighlightId !== null) {
-        if (requiredIds.includes(card.id)) {
+        if (card.id === dependencyHighlightId) {
+          hasScore += ' dependency-source';
+        } else if (requiredIds.includes(card.id)) {
           hasScore += ' dependency-highlight';
-        } else if (card.id !== dependencyHighlightId) {
+        } else {
           hasScore += ' dim'; // 関係ないものは薄くする
         }
       }
@@ -137,7 +140,7 @@
     list.querySelectorAll('.card-chip').forEach(function (btn) {
       btn.addEventListener('click', function () { selectCard(parseInt(btn.dataset.cardId, 10)); });
       btn.addEventListener('mouseenter', showTooltip);
-      btn.addEventListener('mouseenter', showTooltip);
+
       btn.addEventListener('mousemove', moveTooltip);
       btn.addEventListener('mouseleave', hideTooltip);
       btn.addEventListener('contextmenu', function (e) {
@@ -148,12 +151,20 @@
   }
 
   function toggleDependencyHighlight(cardId) {
+    const list = document.getElementById('cardList');
+
     if (dependencyHighlightId === cardId) {
       dependencyHighlightId = null;
+      renderAll();
+      if (list) list.scrollTop = lastScrollTop;
     } else {
+      if (dependencyHighlightId === null && list) {
+        lastScrollTop = list.scrollTop;
+      }
       dependencyHighlightId = cardId;
+      renderAll();
+      if (list) list.scrollTop = 0;
     }
-    renderAll();
   }
 
   function selectCard(cardTypeId) {

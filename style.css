@@ -301,12 +301,12 @@ body {
 }
 
 .card-chip.has-score.selected {
-  border-color: var(--score);
+  border-color: var(--accent);
   border-width: 3px;
   padding: 7px;
   /* 8px - 1px to compensate for thicker border */
-  background: rgba(158, 206, 106, 0.35);
-  box-shadow: 0 0 0 3px rgba(158, 206, 106, 0.4), 0 4px 12px rgba(158, 206, 106, 0.3);
+  background: rgba(122, 162, 247, 0.35);
+  box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.4), 0 4px 12px rgba(122, 162, 247, 0.3);
   transform: translateY(-2px);
 }
 
@@ -550,4 +550,20 @@ body {
 .card-chip.dim {
   opacity: 0.3;
   filter: grayscale(0.8);
+}
+
+.card-chip.dependency-source {
+  border-color: #7aa2f7;
+  background: rgba(122, 162, 247, 0.4);
+  box-shadow: 0 0 15px rgba(122, 162, 247, 0.5);
+}
+
+.card-chip.dependency-source:hover {
+  border-color: #7aa2f7;
+  background: rgba(122, 162, 247, 0.5);
+}
+
+.card-chip.dependency-highlight:hover {
+  border-color: #ff9e64;
+  background: rgba(255, 158, 100, 0.3);
 }

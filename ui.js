@@ -292,7 +292,10 @@
       const card = state.cardTypes[cardTypeId];
       if (card) {
         const label = state.scoreParamNames[card.name] || card.name;
-        html += `<div class="mutation-stat-item"><span class="name">${label}</span><span class="count">×${count}</span></div>`;
+        const imageHtml = card.image
+          ? `<img src="${card.image}" alt="${label}" class="icon">`
+          : '';
+        html += `<div class="mutation-stat-item">${imageHtml}<span class="name">${label}</span><span class="count">×${count}</span></div>`;
       }
     });
 

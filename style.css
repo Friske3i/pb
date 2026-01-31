@@ -707,3 +707,11 @@ img {
     color: #7dd3fc;
     font-weight: 600;
 }
+
+
+.mutation-stat-item .icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 2px;
+}

@@ -100,7 +100,9 @@ function createGameState(config) {
     scoreParams,
     scoreParamNames: config.scoreParamNames || {},
     selectedCardTypeId: null,
-    placementIdCounter: 0
+    placementIdCounter: 0,
+    history: [],
+    historyIndex: -1
   };
 }
 
@@ -145,8 +147,8 @@ function placeCard(state, row, col, cardTypeId) {
     }
   }
 
-  // 重なるカードを削除
-  overlapping.forEach(pos => destroyCard(state, pos.row, pos.col));
+  // 重なるカードを削除（履歴保存なし）
+  overlapping.forEach(pos => destroyCardInternal(state, pos.row, pos.col));
 
   const placementId = state.placementIdCounter++;
   for (let r = row; r < row + size; r++) {
@@ -169,6 +171,16 @@ function placeCard(state, row, col, cardTypeId) {
 function destroyCard(state, row, col) {
   const cell = state.board[row][col];
   if (!cell) return false;
+
+  destroyCardInternal(state, row, col);
+  return true;
+}
+
+// 内部用: 履歴を保存せずにカードを破壊
+function destroyCardInternal(state, row, col) {
+  const cell = state.board[row][col];
+  if (!cell) return false;
+
   const { originRow, originCol, size } = cell;
   for (let r = originRow; r < originRow + size; r++) {
     for (let c = originCol; c < originCol + size; c++) {
@@ -231,6 +243,74 @@ function shuffle(arr) {
   }
 }
 
+// 履歴管理: ボードの深いコピーを作成してスナップショットを保存
+function saveStateSnapshot(state) {
+  // 新しいアクションを行う場合、現在のインデックスより後の履歴を削除
+  if (state.historyIndex < state.history.length - 1) {
+    state.history = state.history.slice(0, state.historyIndex + 1);
+  }
+
+  // ボードの深いコピーを作成
+  const snapshot = state.board.map(row =>
+    row.map(cell => cell ? { ...cell } : null)
+  );
+
+  state.history.push({
+    board: snapshot,
+    placementIdCounter: state.placementIdCounter
+  });
+  state.historyIndex++;
+
+  // 履歴が長くなりすぎないよう制限（最大50ステップ）
+  if (state.history.length > 50) {
+    state.history.shift();
+    state.historyIndex--;
+  }
+}
+
+function undo(state) {
+  if (state.historyIndex <= 0) return false;
+
+  state.historyIndex--;
+  const snapshot = state.history[state.historyIndex];
+
+  // スナップショットからボードを復元
+  state.board = snapshot.board.map(row =>
+    row.map(cell => cell ? { ...cell } : null)
+  );
+  state.placementIdCounter = snapshot.placementIdCounter;
+
+  return true;
+}
+
+function redo(state) {
+  if (state.historyIndex >= state.history.length - 1) return false;
+
+  state.historyIndex++;
+  const snapshot = state.history[state.historyIndex];
+
+  // スナップショットからボードを復元
+  state.board = snapshot.board.map(row =>
+    row.map(cell => cell ? { ...cell } : null)
+  );
+  state.placementIdCounter = snapshot.placementIdCounter;
+
+  return true;
+}
+
+// 初期状態を履歴に保存（ゲーム開始時のみ呼ばれる）
+function saveInitialState(state) {
+  const snapshot = state.board.map(row =>
+    row.map(cell => cell ? { ...cell } : null)
+  );
+
+  state.history.push({
+    board: snapshot,
+    placementIdCounter: state.placementIdCounter
+  });
+  state.historyIndex = 0;
+}
+
 // 設定を読み込み（fetch）
 function loadConfig(url) {
   url = url || 'config.json';
@@ -248,6 +328,12 @@ window.Game = {
   placeCard,
   destroyCard,
   progress,
+  undo,
+  redo,
+  saveInitialState,
+  saveStateSnapshot,
+  canUndo(state) { return state.historyIndex > 0; },
+  canRedo(state) { return state.historyIndex < state.history.length - 1; },
   getCardTypes(state) { return state.cardTypes; },
   getBoard(state) { return state.board; },
   getScoreParam(state) { return { index: state.scoreParamIndex, name: state.scoreParamName }; }

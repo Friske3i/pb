@@ -148,6 +148,12 @@ body {
   background: rgba(247, 118, 142, 0.2);
 }
 
+.icon-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .hint {
   margin: 0.5rem 0 0 0;
   font-size: 0.8rem;

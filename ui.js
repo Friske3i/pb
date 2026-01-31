@@ -6,12 +6,15 @@
   let dependencyHighlightId = null;
   let lastScrollTop = 0;
   let isMouseDown = false;
+  let lastProcessedCell = null; // 最後に処理したセルを記録
 
   function init() {
     window.Game.loadConfig()
       .then(function (config) {
         state = window.Game.createGameState(config);
         destroyMode = false;
+        // 初期状態を履歴に保存
+        window.Game.saveInitialState(state);
         renderAll();
         bindEvents();
       })
@@ -27,6 +30,7 @@
     renderCardList();
     renderBoard();
     updateDestroyButton();
+    updateHistoryButtons();
   }
 
   function renderScoreParamSelector() {
@@ -238,7 +242,9 @@
             div.addEventListener('mouseleave', hideTooltip);
             div.addEventListener('contextmenu', function (e) {
               e.preventDefault();
-              toggleDependencyHighlight(cell.cardTypeId);
+              window.Game.saveStateSnapshot(state);
+              window.Game.destroyCard(state, r, c);
+              renderAll();
             });
           } else {
             div.textContent = '';
@@ -247,22 +253,19 @@
         boardEl.appendChild(div);
       }
     }
-
-    boardEl.querySelectorAll('.cell').forEach(function (el) {
-      el.addEventListener('mousedown', function () {
-        onCellClick(parseInt(el.dataset.row, 10), parseInt(el.dataset.col, 10), false);
-      });
-      el.addEventListener('mouseenter', function () {
-        if (isMouseDown) {
-          onCellClick(parseInt(el.dataset.row, 10), parseInt(el.dataset.col, 10), true);
-        }
-      });
-    });
   }
 
   function onCellClick(row, col, isDrag) {
+    // ドラッグ時に同じセルでは再度処理しない
+    if (isDrag && lastProcessedCell && lastProcessedCell.row === row && lastProcessedCell.col === col) {
+      return;
+    }
+
     if (destroyMode) {
+      // 履歴を保存
+      window.Game.saveStateSnapshot(state);
       window.Game.destroyCard(state, row, col);
+      lastProcessedCell = { row, col };
       renderAll();
       return;
     }
@@ -285,11 +288,32 @@
       }
     }
 
+    // 同じマスに同じmutationを再設置する場合はスキップ
+    const existingCell = state.board[row][col];
+    if (existingCell && existingCell.cardTypeId === state.selectedCardTypeId) {
+      const card = state.cardTypes[state.selectedCardTypeId];
+      // サイズ1の場合：常にスキップ
+      if (card.size === 1) {
+        return;
+      }
+      // サイズ2以上の場合：同じ配置位置（origin）ならスキップ
+      if (existingCell.originRow === row && existingCell.originCol === col) {
+        return;
+      }
+    }
+
+    // 履歴を保存
+    window.Game.saveStateSnapshot(state);
     const ok = window.Game.placeCard(state, row, col, state.selectedCardTypeId);
-    if (ok) renderAll();
+    if (ok) {
+      lastProcessedCell = { row, col };
+      renderAll();
+    }
   }
 
   function onProgressClick() {
+    // 履歴を保存
+    window.Game.saveStateSnapshot(state);
     window.Game.progress(state);
     renderAll();
   }
@@ -304,6 +328,25 @@
   function updateDestroyButton() {
     const btn = document.getElementById('destroyModeBtn');
     btn.classList.toggle('active', destroyMode);
+  }
+
+  function updateHistoryButtons() {
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+    if (undoBtn) undoBtn.disabled = !window.Game.canUndo(state);
+    if (redoBtn) redoBtn.disabled = !window.Game.canRedo(state);
+  }
+
+  function onUndo() {
+    if (window.Game.undo(state)) {
+      renderAll();
+    }
+  }
+
+  function onRedo() {
+    if (window.Game.redo(state)) {
+      renderAll();
+    }
   }
 
   // Tooltip Logic
@@ -373,13 +416,52 @@
   }
 
   function bindEvents() {
-    document.addEventListener('mousedown', () => isMouseDown = true);
-    document.addEventListener('mouseup', () => isMouseDown = false);
+    document.addEventListener('mousedown', () => {
+      isMouseDown = true;
+      lastProcessedCell = null; // マウスダウン時にリセット
+    });
+    document.addEventListener('mouseup', () => {
+      isMouseDown = false;
+      lastProcessedCell = null; // マウスアップ時にリセット
+    });
     document.getElementById('progressBtn').addEventListener('click', onProgressClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
     document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+    document.getElementById('undoBtn').addEventListener('click', onUndo);
+    document.getElementById('redoBtn').addEventListener('click', onRedo);
     document.getElementById('scoreParamSelector').addEventListener('change', onScoreParamChange);
     document.getElementById('mutationSearch').addEventListener('input', onSearchInput);
+
+    // ボードのイベント委譲（重複を防ぐ）
+    const boardEl = document.getElementById('board');
+    boardEl.addEventListener('mousedown', function (e) {
+      const cell = e.target.closest('.cell');
+      if (cell) {
+        onCellClick(parseInt(cell.dataset.row, 10), parseInt(cell.dataset.col, 10), false);
+      }
+    });
+    boardEl.addEventListener('mouseenter', function (e) {
+      if (isMouseDown) {
+        const cell = e.target.closest('.cell');
+        if (cell) {
+          onCellClick(parseInt(cell.dataset.row, 10), parseInt(cell.dataset.col, 10), true);
+        }
+      }
+    }, true); // Use capture phase for mouseenter on child elements
+
+    // キーボードショートカット
+    document.addEventListener('keydown', function (e) {
+      // Ctrl+Z: Undo
+      if (e.ctrlKey && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        onUndo();
+      }
+      // Ctrl+Y or Ctrl+Shift+Z: Redo
+      else if ((e.ctrlKey && e.key === 'y') || (e.ctrlKey && e.shiftKey && e.key === 'z')) {
+        e.preventDefault();
+        onRedo();
+      }
+    });
   }
 
   function onSearchInput(e) {
@@ -389,6 +471,10 @@
 
   function clearAll() {
     if (!confirm('Are you sure you want to clear all mutations?')) return;
+
+    // 履歴を保存
+    window.Game.saveStateSnapshot(state);
+
     for (let r = 0; r < window.Game.BOARD_SIZE; r++) {
       for (let c = 0; c < window.Game.BOARD_SIZE; c++) {
         state.board[r][c] = null;

@@ -366,6 +366,7 @@
         window.Game.saveStateSnapshot(state);
         lastProcessedCell = { row, col };
         renderAll();
+        hideTooltip(); // 破壊後はツールチップを隠す
       }
       return;
     }
@@ -589,6 +590,7 @@
 
   // Tooltip Logic
   function showTooltip(e) {
+    if (isMouseDown) return; // ドラッグ中（破壊モードのスライドなど）はツールチップを表示しない
     const tooltip = document.getElementById('tooltip');
     const target = e.currentTarget;
     const title = target.dataset.tooltipTitle;
@@ -767,7 +769,7 @@
     // シミュレーションモードトグル
     document.getElementById('simulationModeToggle').addEventListener('change', function (e) {
       state.simulationMode = e.target.checked;
-      renderBoard(); // ボードを再描画して成長段階インジケーターを表示/非表示
+      renderAll(); // 全体を再描画してスコアや成長段階などを更新
     });
 
     // ボードのイベント委譲（重複を防ぐ）

@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const BOARD_SIZE = window.Game.BOARD_SIZE;
   let state = null;
   let destroyMode = false;
@@ -31,6 +31,7 @@
     renderBoard();
     updateDestroyButton();
     updateHistoryButtons();
+    renderMutationStats();
   }
 
   function renderScoreParamSelector() {
@@ -254,6 +255,52 @@
     }
   }
 
+  function renderMutationStats() {
+    const statsEl = document.getElementById('mutationStats');
+
+    // 各mutationの配置数をカウント
+    const mutationCounts = {};
+    const processedPlacements = new Set();
+
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        const cell = state.board[r][c];
+        if (cell) {
+          // 同じplacementIdを持つセルは1つのmutationとしてカウント
+          const key = `${cell.placementId}`;
+          if (!processedPlacements.has(key)) {
+            processedPlacements.add(key);
+            mutationCounts[cell.cardTypeId] = (mutationCounts[cell.cardTypeId] || 0) + 1;
+          }
+        }
+      }
+    }
+
+    // カウントが0の場合
+    if (Object.keys(mutationCounts).length === 0) {
+      statsEl.innerHTML = '<h3>Placed Mutations</h3><div class="mutation-stats-list">No mutations placed yet</div>';
+      return;
+    }
+
+    // HTML構築
+    let html = '<h3>Placed Mutations</h3><div class="mutation-stats-list">';
+
+    // カウント順にソート（降順）
+    const sorted = Object.entries(mutationCounts).sort((a, b) => b[1] - a[1]);
+
+    sorted.forEach(([cardTypeId, count]) => {
+      const card = state.cardTypes[cardTypeId];
+      if (card) {
+        const label = state.scoreParamNames[card.name] || card.name;
+        html += `<div class="mutation-stat-item"><span class="name">${label}</span><span class="count">×${count}</span></div>`;
+      }
+    });
+
+    html += '</div>';
+    statsEl.innerHTML = html;
+  }
+
+
   function onCellClick(row, col, isDrag) {
     // ドラッグ時に同じセルでは再度処理しない
     if (isDrag && lastProcessedCell && lastProcessedCell.row === row && lastProcessedCell.col === col) {
@@ -261,11 +308,13 @@
     }
 
     if (destroyMode) {
-      window.Game.destroyCard(state, row, col);
-      // 履歴を保存（実行後）
-      window.Game.saveStateSnapshot(state);
-      lastProcessedCell = { row, col };
-      renderAll();
+      const success = window.Game.destroyCard(state, row, col);
+      if (success) {
+        // 履歴を保存（実行後、成功時のみ）
+        window.Game.saveStateSnapshot(state);
+        lastProcessedCell = { row, col };
+        renderAll();
+      }
       return;
     }
     if (state.selectedCardTypeId === null) return;

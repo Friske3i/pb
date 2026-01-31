@@ -800,7 +800,9 @@
     // 既存プレビュー削除（競合状態を防ぐため最初に実行）
     clearPreview();
 
-    if (state.selectedMutationId === null || destroyMode || isMouseDown) return;
+    // Eyedropper mode check
+    const isEyedropperMode = boardEl.classList.contains('eyedropper-mode');
+    if (state.selectedMutationId === null || destroyMode || isMouseDown || isEyedropperMode) return;
 
     const mutation = state.mutationTypes[state.selectedMutationId];
     if (!mutation) return;
@@ -867,6 +869,26 @@
       isMouseDown = false;
       lastProcessedCell = null;
     });
+
+    // Eyedropper mode: right-click on board
+    const boardEl = document.getElementById('board');
+    boardEl.addEventListener('mousedown', (e) => {
+      if (e.button === 2) { // Right-click
+        boardEl.classList.add('eyedropper-mode');
+        clearPreview(); // Clear preview overlay immediately
+      }
+    });
+    boardEl.addEventListener('mouseup', (e) => {
+      if (e.button === 2) { // Right-click release
+        boardEl.classList.remove('eyedropper-mode');
+      }
+    });
+    boardEl.addEventListener('contextmenu', () => {
+      boardEl.classList.remove('eyedropper-mode');
+    });
+    boardEl.addEventListener('mouseleave', () => {
+      boardEl.classList.remove('eyedropper-mode');
+    });
     const progressBtn = document.getElementById('progressBtn');
     progressBtn.addEventListener('click', onProgressClick);
     progressBtn.addEventListener('contextmenu', onProgressContextmenu);
@@ -886,7 +908,7 @@
     });
 
     // ボードのイベント委譲（重複を防ぐ）
-    const boardEl = document.getElementById('board');
+    // boardEl already declared above for eyedropper mode
     boardEl.addEventListener('mousedown', function (e) {
       // 左クリックのみ処理
       if (e.button !== 0) return;

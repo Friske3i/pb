@@ -84,7 +84,11 @@
   }
 
   function selectCard(cardTypeId) {
-    if (destroyMode) return;
+    if (destroyMode) {
+      // 破壊モードを自動解除
+      destroyMode = false;
+      updateDestroyButton();
+    }
     state.selectedCardTypeId = cardTypeId;
     document.querySelectorAll('.card-chip').forEach(function (el) {
       el.classList.toggle('selected', parseInt(el.dataset.cardId, 10) === cardTypeId);
@@ -154,7 +158,6 @@
 
   function updateDestroyButton() {
     const btn = document.getElementById('destroyModeBtn');
-    btn.textContent = destroyMode ? 'Destroy Mode ON' : 'Destroy Mode';
     btn.classList.toggle('active', destroyMode);
   }
 

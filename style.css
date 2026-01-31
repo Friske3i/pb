@@ -99,10 +99,48 @@ body {
   padding: 1rem;
 }
 
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
 .panel h2 {
   margin: 0 0 0.5rem 0;
   font-size: 1rem;
   font-weight: 600;
+}
+
+.trash-btn {
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trash-btn:hover {
+  border-color: #f7768e;
+  color: #f7768e;
+  background: rgba(247, 118, 142, 0.1);
+}
+
+.trash-btn.active {
+  border-color: #f7768e;
+  color: #f7768e;
+  background: rgba(247, 118, 142, 0.2);
 }
 
 .hint {
@@ -152,14 +190,18 @@ body {
 
 .card-chip.selected {
   border-color: var(--accent);
-  background: rgba(122, 162, 247, 0.2);
-  box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.3);
+  border-width: 3px;
+  background: rgba(122, 162, 247, 0.35);
+  box-shadow: 0 0 0 3px rgba(122, 162, 247, 0.4), 0 4px 12px rgba(122, 162, 247, 0.3);
+  transform: translateY(-2px);
 }
 
 .card-chip.has-score.selected {
   border-color: var(--score);
-  background: rgba(158, 206, 106, 0.25);
-  box-shadow: 0 0 0 2px rgba(158, 206, 106, 0.3);
+  border-width: 3px;
+  background: rgba(158, 206, 106, 0.35);
+  box-shadow: 0 0 0 3px rgba(158, 206, 106, 0.4), 0 4px 12px rgba(158, 206, 106, 0.3);
+  transform: translateY(-2px);
 }
 
 .card-chip .size-badge {

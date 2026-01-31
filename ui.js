@@ -76,10 +76,10 @@
         : '';
       return '<button type="button" class="card-chip' + hasScore + '" data-card-id="' + card.id + '" title="' + title + '">' +
         '<span class="size-badge">' + card.size + '×' + card.size + '</span>' +
+        '<span class="score-num">' + scoreVal + '</span>' +
         imageHtml +
         '<div class="card-info">' +
         '<span>' + label + '</span>' +
-        '<span class="score-num">' + scoreVal + '</span>' +
         '</div>' +
         '</button>';
     }).join('');

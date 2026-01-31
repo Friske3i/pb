@@ -17,1057 +17,1231 @@
   "cards": [
     {
       "id": 0,
-      "name": "Mutation 01",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 1,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 3,
-        "carrot": 0,
-        "potato": 2,
-        "cactus": 1,
-        "pumpkin": 4,
-        "melon": 0,
-        "rose": 2,
-        "sun": 1,
-        "moon": 0,
-        "cane": 2,
-        "wart": 1,
-        "mush": 0,
-        "cocoa": 5
-      }
-    },
-    {
-      "id": 1,
-      "name": "Mutation 02",
+      "name": "Brown Mushroom",
       "size": 1,
       "conditions": [
         {
           "id": 0,
-          "amount": 2
+          "amount": 99
         }
       ],
       "scores": {
         "wheat": 0,
-        "carrot": 4,
-        "potato": 1,
-        "cactus": 2,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
         "pumpkin": 0,
-        "melon": 3,
+        "melon": 0,
         "rose": 0,
-        "sun": 2,
-        "moon": 1,
+        "sun": 0,
+        "moon": 0,
         "cane": 0,
-        "wart": 3,
-        "mush": 2,
+        "wart": 0,
+        "mush": 100,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 1,
+      "name": "Red Mushroom",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 100,
         "cocoa": 0
       }
     },
     {
       "id": 2,
-      "name": "Mutation 03",
+      "name": "Cactus",
       "size": 1,
       "conditions": [
         {
-          "id": 3,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 2,
-        "carrot": 2,
-        "potato": 0,
-        "cactus": 5,
-        "pumpkin": 1,
-        "melon": 2,
-        "rose": 0,
-        "sun": 0,
-        "moon": 3,
-        "cane": 1,
-        "wart": 0,
-        "mush": 4,
-        "cocoa": 1
-      }
-    },
-    {
-      "id": 3,
-      "name": "Mutation 04",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 2,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 1,
-        "carrot": 0,
-        "potato": 5,
-        "cactus": 0,
-        "pumpkin": 2,
-        "melon": 1,
-        "rose": 3,
-        "sun": 0,
-        "moon": 0,
-        "cane": 2,
-        "wart": 2,
-        "mush": 0,
-        "cocoa": 4
-      }
-    },
-    {
-      "id": 4,
-      "name": "Mutation 05",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 5,
-          "amount": 1
+          "id": 0,
+          "amount": 99
         }
       ],
       "scores": {
         "wheat": 0,
-        "carrot": 3,
-        "potato": 2,
-        "cactus": 1,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 100,
         "pumpkin": 0,
-        "melon": 5,
-        "rose": 1,
-        "sun": 2,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
         "moon": 0,
         "cane": 0,
-        "wart": 4,
-        "mush": 1,
-        "cocoa": 2
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 3,
+      "name": "Carrot",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 100,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 4,
+      "name": "Cocoa Beans",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 100
       }
     },
     {
       "id": 5,
-      "name": "Mutation 06",
+      "name": "Melon Seeds",
       "size": 1,
       "conditions": [
         {
-          "id": 4,
-          "amount": 2
-        },
-        {
-          "id": 6,
-          "amount": 1
+          "id": 0,
+          "amount": 99
         }
       ],
       "scores": {
-        "wheat": 4,
-        "carrot": 1,
+        "wheat": 0,
+        "carrot": 0,
         "potato": 0,
-        "cactus": 2,
-        "pumpkin": 3,
-        "melon": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 100,
         "rose": 0,
-        "sun": 5,
-        "moon": 2,
-        "cane": 1,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
         "wart": 0,
-        "mush": 2,
+        "mush": 0,
         "cocoa": 0
       }
     },
     {
       "id": 6,
-      "name": "Mutation 07",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 7,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 2,
-        "carrot": 0,
-        "potato": 3,
-        "cactus": 0,
-        "pumpkin": 1,
-        "melon": 2,
-        "rose": 5,
-        "sun": 0,
-        "moon": 4,
-        "cane": 0,
-        "wart": 1,
-        "mush": 0,
-        "cocoa": 2
-      }
-    },
-    {
-      "id": 7,
-      "name": "Mutation 08",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 5,
-          "amount": 3
-        },
-        {
-          "id": 6,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 2,
-        "potato": 1,
-        "cactus": 4,
-        "pumpkin": 0,
-        "melon": 0,
-        "rose": 2,
-        "sun": 3,
-        "moon": 0,
-        "cane": 5,
-        "wart": 0,
-        "mush": 1,
-        "cocoa": 3
-      }
-    },
-    {
-      "id": 8,
-      "name": "Mutation 09",
+      "name": "Pumpkin",
       "size": 1,
       "conditions": [
         {
           "id": 0,
-          "amount": 1
+          "amount": 99
         }
       ],
       "scores": {
-        "wheat": 5,
+        "wheat": 0,
         "carrot": 0,
         "potato": 0,
-        "cactus": 3,
-        "pumpkin": 2,
-        "melon": 1,
+        "cactus": 0,
+        "pumpkin": 100,
+        "melon": 0,
         "rose": 0,
         "sun": 0,
-        "moon": 2,
-        "cane": 1,
-        "wart": 3,
-        "mush": 4,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 7,
+      "name": "Wheat Seeds",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 100,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 8,
+      "name": "Potato",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 100,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
         "cocoa": 0
       }
     },
     {
       "id": 9,
-      "name": "Mutation 10",
+      "name": "Nether Wart",
       "size": 1,
       "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 100,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 10,
+      "name": "Wild Rose",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 100,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 11,
+      "name": "Sunflower",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 100,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 12,
+      "name": "Moonflower",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 100,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 13,
+      "name": "Sugar Cane",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 100,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 14,
+      "name": "Dead Plants",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 15,
+      "name": "Fire",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 16,
+      "name": "Ashwreath",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 9,
+          "amount": 4
+        },
+        {
+          "id": 15,
+          "amount": 4
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 720,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 17,
+      "name": "Choconut",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 4,
+          "amount": 4
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 400
+      }
+    },
+    {
+      "id": 18,
+      "name": "Dustgrain",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 7,
+          "amount": 4
+        }
+      ],
+      "scores": {
+        "wheat": 200,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 19,
+      "name": "Gloomgourd",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 5,
+          "amount": 1
+        },
+        {
+          "id": 6,
+          "amount": 1
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 60,
+        "melon": 280,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 20,
+      "name": "Lonelily",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 700,
+        "potato": 600,
+        "cactus": 0,
+        "pumpkin": 340,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 21,
+      "name": "Scourroot",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 3,
+          "amount": 2
+        },
         {
           "id": 8,
           "amount": 2
         }
       ],
       "scores": {
-        "wheat": 1,
-        "carrot": 5,
-        "potato": 0,
-        "cactus": 0,
-        "pumpkin": 4,
-        "melon": 2,
-        "rose": 1,
-        "sun": 0,
-        "moon": 0,
-        "cane": 3,
-        "wart": 2,
-        "mush": 0,
-        "cocoa": 4
-      }
-    },
-    {
-      "id": 10,
-      "name": "Mutation 11",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 9,
-          "amount": 1
-        }
-      ],
-      "scores": {
         "wheat": 0,
-        "carrot": 1,
-        "potato": 4,
-        "cactus": 2,
+        "carrot": 210,
+        "potato": 245,
+        "cactus": 0,
         "pumpkin": 0,
         "melon": 0,
-        "rose": 4,
-        "sun": 1,
-        "moon": 5,
-        "cane": 0,
-        "wart": 0,
-        "mush": 2,
-        "cocoa": 1
-      }
-    },
-    {
-      "id": 11,
-      "name": "Mutation 12",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 10,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 3,
-        "carrot": 0,
-        "potato": 0,
-        "cactus": 1,
-        "pumpkin": 5,
-        "melon": 3,
-        "rose": 0,
-        "sun": 2,
-        "moon": 0,
-        "cane": 0,
-        "wart": 4,
-        "mush": 1,
-        "cocoa": 2
-      }
-    },
-    {
-      "id": 12,
-      "name": "Mutation 13",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 11,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 2,
-        "carrot": 3,
-        "potato": 1,
-        "cactus": 0,
-        "pumpkin": 0,
-        "melon": 4,
         "rose": 0,
         "sun": 0,
-        "moon": 3,
-        "cane": 2,
-        "wart": 1,
-        "mush": 5,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
         "cocoa": 0
-      }
-    },
-    {
-      "id": 13,
-      "name": "Mutation 14",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 12,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 0,
-        "potato": 2,
-        "cactus": 4,
-        "pumpkin": 1,
-        "melon": 0,
-        "rose": 3,
-        "sun": 4,
-        "moon": 0,
-        "cane": 1,
-        "wart": 0,
-        "mush": 0,
-        "cocoa": 5
-      }
-    },
-    {
-      "id": 14,
-      "name": "Mutation 15",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 13,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 4,
-        "carrot": 2,
-        "potato": 0,
-        "cactus": 0,
-        "pumpkin": 0,
-        "melon": 1,
-        "rose": 2,
-        "sun": 0,
-        "moon": 4,
-        "cane": 0,
-        "wart": 5,
-        "mush": 0,
-        "cocoa": 3
-      }
-    },
-    {
-      "id": 15,
-      "name": "Mutation 16",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 14,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 1,
-        "carrot": 0,
-        "potato": 3,
-        "cactus": 2,
-        "pumpkin": 4,
-        "melon": 0,
-        "rose": 0,
-        "sun": 1,
-        "moon": 0,
-        "cane": 4,
-        "wart": 2,
-        "mush": 3,
-        "cocoa": 0
-      }
-    },
-    {
-      "id": 16,
-      "name": "Mutation 17",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 15,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 4,
-        "potato": 0,
-        "cactus": 1,
-        "pumpkin": 2,
-        "melon": 5,
-        "rose": 0,
-        "sun": 0,
-        "moon": 2,
-        "cane": 3,
-        "wart": 0,
-        "mush": 0,
-        "cocoa": 4
-      }
-    },
-    {
-      "id": 17,
-      "name": "Mutation 18",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 16,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 3,
-        "carrot": 0,
-        "potato": 1,
-        "cactus": 5,
-        "pumpkin": 0,
-        "melon": 0,
-        "rose": 4,
-        "sun": 2,
-        "moon": 0,
-        "cane": 0,
-        "wart": 1,
-        "mush": 2,
-        "cocoa": 3
-      }
-    },
-    {
-      "id": 18,
-      "name": "Mutation 19",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 17,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 2,
-        "potato": 4,
-        "cactus": 0,
-        "pumpkin": 0,
-        "melon": 2,
-        "rose": 1,
-        "sun": 5,
-        "moon": 0,
-        "cane": 0,
-        "wart": 3,
-        "mush": 4,
-        "cocoa": 1
-      }
-    },
-    {
-      "id": 19,
-      "name": "Mutation 20",
-      "size": 1,
-      "conditions": [
-        {
-          "id": 18,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 2,
-        "carrot": 0,
-        "potato": 0,
-        "cactus": 3,
-        "pumpkin": 5,
-        "melon": 1,
-        "rose": 0,
-        "sun": 0,
-        "moon": 3,
-        "cane": 2,
-        "wart": 0,
-        "mush": 0,
-        "cocoa": 5
-      }
-    },
-    {
-      "id": 20,
-      "name": "Mutation 21",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 19,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 5,
-        "carrot": 2,
-        "potato": 1,
-        "cactus": 0,
-        "pumpkin": 3,
-        "melon": 0,
-        "rose": 2,
-        "sun": 0,
-        "moon": 4,
-        "cane": 1,
-        "wart": 0,
-        "mush": 2,
-        "cocoa": 0
-      }
-    },
-    {
-      "id": 21,
-      "name": "Mutation 22",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 20,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 5,
-        "potato": 3,
-        "cactus": 2,
-        "pumpkin": 0,
-        "melon": 4,
-        "rose": 0,
-        "sun": 1,
-        "moon": 0,
-        "cane": 2,
-        "wart": 3,
-        "mush": 0,
-        "cocoa": 1
       }
     },
     {
       "id": 22,
-      "name": "Mutation 23",
-      "size": 2,
+      "name": "Shadevine",
+      "size": 1,
       "conditions": [
         {
-          "id": 21,
-          "amount": 1
+          "id": 2,
+          "amount": 2
+        },
+        {
+          "id": 13,
+          "amount": 2
         }
       ],
       "scores": {
-        "wheat": 2,
+        "wheat": 0,
         "carrot": 0,
-        "potato": 5,
-        "cactus": 1,
+        "potato": 0,
+        "cactus": 135,
         "pumpkin": 0,
-        "melon": 2,
-        "rose": 4,
+        "melon": 0,
+        "rose": 0,
         "sun": 0,
         "moon": 0,
-        "cane": 0,
-        "wart": 1,
-        "mush": 3,
-        "cocoa": 4
+        "cane": 180,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
       }
     },
     {
       "id": 23,
-      "name": "Mutation 24",
-      "size": 2,
+      "name": "Veilshroom",
+      "size": 1,
       "conditions": [
+        {
+          "id": 0,
+          "amount": 2
+        },
+        {
+          "id": 1,
+          "amount": 2
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 132,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 24,
+      "name": "Witherbloom",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 14,
+          "amount": 8
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 600,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 25,
+      "name": "Chocoberry",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 17,
+          "amount": 6
+        },
+        {
+          "id": 19,
+          "amount": 2
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 170,
+        "melon": 1600,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 400
+      }
+    },
+    {
+      "id": 26,
+      "name": "Cindershade",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 16,
+          "amount": 4
+        },
+        {
+          "id": 24,
+          "amount": 4
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 800,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 1200,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 27,
+      "name": "Coalroot",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 16,
+          "amount": 5
+        },
+        {
+          "id": 21,
+          "amount": 3
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 1400,
+        "potato": 600,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 600,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 28,
+      "name": "Creambloom",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 17,
+          "amount": 8
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 1600
+      }
+    },
+    {
+      "id": 29,
+      "name": "Duskbloom",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 11,
+          "amount": 2
+        },
+        {
+          "id": 12,
+          "amount": 2
+        },
+        {
+          "id": 18,
+          "amount": 2
+        },
         {
           "id": 22,
           "amount": 2
         }
       ],
       "scores": {
-        "wheat": 1,
-        "carrot": 3,
-        "potato": 0,
-        "cactus": 5,
-        "pumpkin": 2,
-        "melon": 0,
-        "rose": 0,
-        "sun": 4,
-        "moon": 1,
-        "cane": 0,
-        "wart": 2,
-        "mush": 0,
-        "cocoa": 3
-      }
-    },
-    {
-      "id": 24,
-      "name": "Mutation 25",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 23,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 1,
-        "potato": 2,
-        "cactus": 0,
-        "pumpkin": 5,
-        "melon": 4,
-        "rose": 0,
-        "sun": 0,
-        "moon": 3,
-        "cane": 2,
-        "wart": 0,
-        "mush": 1,
-        "cocoa": 5
-      }
-    },
-    {
-      "id": 25,
-      "name": "Mutation 26",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 24,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 4,
+        "wheat": 267,
         "carrot": 0,
         "potato": 0,
-        "cactus": 3,
-        "pumpkin": 1,
-        "melon": 5,
-        "rose": 2,
-        "sun": 0,
-        "moon": 0,
-        "cane": 4,
-        "wart": 1,
-        "mush": 2,
-        "cocoa": 0
-      }
-    },
-    {
-      "id": 26,
-      "name": "Mutation 27",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 25,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 4,
-        "potato": 1,
-        "cactus": 2,
+        "cactus": 0,
         "pumpkin": 0,
         "melon": 0,
-        "rose": 5,
-        "sun": 3,
-        "moon": 0,
-        "cane": 0,
-        "wart": 2,
-        "mush": 4,
-        "cocoa": 1
-      }
-    },
-    {
-      "id": 27,
-      "name": "Mutation 28",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 26,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 3,
-        "carrot": 0,
-        "potato": 4,
-        "cactus": 0,
-        "pumpkin": 4,
-        "melon": 0,
         "rose": 0,
-        "sun": 5,
-        "moon": 2,
-        "cane": 1,
+        "sun": 533,
+        "moon": 533,
+        "cane": 0,
         "wart": 0,
         "mush": 0,
-        "cocoa": 2
-      }
-    },
-    {
-      "id": 28,
-      "name": "Mutation 29",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 27,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 2,
-        "potato": 0,
-        "cactus": 4,
-        "pumpkin": 0,
-        "melon": 3,
-        "rose": 1,
-        "sun": 0,
-        "moon": 5,
-        "cane": 0,
-        "wart": 4,
-        "mush": 0,
-        "cocoa": 3
-      }
-    },
-    {
-      "id": 29,
-      "name": "Mutation 30",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 28,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 2,
-        "carrot": 0,
-        "potato": 0,
-        "cactus": 1,
-        "pumpkin": 2,
-        "melon": 0,
-        "rose": 0,
-        "sun": 0,
-        "moon": 1,
-        "cane": 5,
-        "wart": 3,
-        "mush": 4,
         "cocoa": 0
       }
     },
     {
       "id": 30,
-      "name": "Mutation 31",
-      "size": 2,
+      "name": "Thornshade",
+      "size": 1,
       "conditions": [
         {
-          "id": 29,
-          "amount": 1
+          "id": 10,
+          "amount": 4
+        },
+        {
+          "id": 23,
+          "amount": 4
         }
       ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
-        "potato": 4,
-        "cactus": 2,
-        "pumpkin": 3,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
         "melon": 0,
-        "rose": 2,
+        "rose": 800,
         "sun": 0,
         "moon": 0,
         "cane": 0,
-        "wart": 5,
-        "mush": 1,
-        "cocoa": 4
+        "wart": 0,
+        "mush": 380,
+        "cocoa": 0
       }
     },
     {
       "id": 31,
-      "name": "Mutation 32",
-      "size": 2,
+      "name": "Blastberry",
+      "size": 1,
       "conditions": [
+        {
+          "id": 16,
+          "amount": 3
+        },
+        {
+          "id": 25,
+          "amount": 5
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 1800,
+        "mush": 0,
+        "cocoa": 1200
+      }
+    },
+    {
+      "id": 32,
+      "name": "Fermento",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 33,
+      "name": "Cheesebite",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 28,
+          "amount": 4
+        },
+        {
+          "id": 32,
+          "amount": 4
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 600,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 800,
+        "wart": 0,
+        "mush": 380,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 34,
+      "name": "Chloronite",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 27,
+          "amount": 6
+        },
         {
           "id": 30,
           "amount": 2
         }
       ],
       "scores": {
-        "wheat": 5,
-        "carrot": 1,
-        "potato": 0,
-        "cactus": 0,
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 600,
+        "cactus": 700,
         "pumpkin": 0,
-        "melon": 4,
-        "rose": 0,
-        "sun": 2,
-        "moon": 4,
-        "cane": 3,
-        "wart": 0,
-        "mush": 0,
-        "cocoa": 2
-      }
-    },
-    {
-      "id": 32,
-      "name": "Mutation 33",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 31,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 1,
-        "carrot": 5,
-        "potato": 0,
-        "cactus": 0,
-        "pumpkin": 1,
         "melon": 0,
-        "rose": 4,
+        "rose": 400,
         "sun": 0,
         "moon": 0,
-        "cane": 2,
-        "wart": 2,
-        "mush": 5,
+        "cane": 0,
+        "wart": 0,
+        "mush": 190,
         "cocoa": 0
       }
     },
     {
-      "id": 33,
-      "name": "Mutation 34",
-      "size": 2,
+      "id": 35,
+      "name": "Do-not-eat-shroom",
+      "size": 1,
       "conditions": [
         {
-          "id": 32,
-          "amount": 2
+          "id": 21,
+          "amount": 4
+        },
+        {
+          "id": 23,
+          "amount": 4
         }
       ],
       "scores": {
         "wheat": 0,
-        "carrot": 1,
-        "potato": 5,
-        "cactus": 4,
+        "carrot": 1400,
+        "potato": 1200,
+        "cactus": 0,
         "pumpkin": 0,
         "melon": 0,
         "rose": 0,
-        "sun": 3,
-        "moon": 2,
-        "cane": 0,
-        "wart": 0,
-        "mush": 1,
-        "cocoa": 5
-      }
-    },
-    {
-      "id": 34,
-      "name": "Mutation 35",
-      "size": 2,
-      "conditions": [
-        {
-          "id": 33,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 3,
-        "carrot": 0,
-        "potato": 2,
-        "cactus": 0,
-        "pumpkin": 5,
-        "melon": 0,
-        "rose": 0,
         "sun": 0,
-        "moon": 5,
-        "cane": 4,
-        "wart": 1,
-        "mush": 0,
-        "cocoa": 1
-      }
-    },
-    {
-      "id": 35,
-      "name": "Mutation 36",
-      "size": 3,
-      "conditions": [
-        {
-          "id": 34,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 6,
-        "carrot": 2,
-        "potato": 1,
-        "cactus": 0,
-        "pumpkin": 3,
-        "melon": 0,
-        "rose": 2,
-        "sun": 1,
         "moon": 0,
         "cane": 0,
-        "wart": 2,
-        "mush": 3,
+        "wart": 0,
+        "mush": 760,
         "cocoa": 0
       }
     },
     {
       "id": 36,
-      "name": "Mutation 37",
-      "size": 3,
+      "name": "Fleshtrap",
+      "size": 1,
       "conditions": [
         {
-          "id": 35,
-          "amount": 2
+          "id": 20,
+          "amount": 4
+        },
+        {
+          "id": 26,
+          "amount": 4
         }
       ],
       "scores": {
         "wheat": 0,
-        "carrot": 6,
-        "potato": 3,
-        "cactus": 2,
-        "pumpkin": 0,
-        "melon": 4,
+        "carrot": 1400,
+        "potato": 1200,
+        "cactus": 0,
+        "pumpkin": 680,
+        "melon": 0,
         "rose": 0,
         "sun": 0,
-        "moon": 2,
-        "cane": 1,
+        "moon": 0,
+        "cane": 0,
         "wart": 0,
-        "mush": 2,
-        "cocoa": 4
+        "mush": 0,
+        "cocoa": 0
       }
     },
     {
       "id": 37,
-      "name": "Mutation 38",
-      "size": 3,
+      "name": "Magic Jellybean",
+      "size": 1,
       "conditions": [
         {
-          "id": 36,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 2,
-        "carrot": 0,
-        "potato": 6,
-        "cactus": 1,
-        "pumpkin": 0,
-        "melon": 2,
-        "rose": 4,
-        "sun": 0,
-        "moon": 0,
-        "cane": 3,
-        "wart": 1,
-        "mush": 0,
-        "cocoa": 5
-      }
-    },
-    {
-      "id": 38,
-      "name": "Mutation 39",
-      "size": 3,
-      "conditions": [
+          "id": 13,
+          "amount": 5
+        },
         {
-          "id": 37,
-          "amount": 2
+          "id": 29,
+          "amount": 3
         }
       ],
       "scores": {
         "wheat": 0,
-        "carrot": 2,
+        "carrot": 0,
         "potato": 0,
-        "cactus": 6,
-        "pumpkin": 4,
+        "cactus": 0,
+        "pumpkin": 0,
         "melon": 0,
         "rose": 0,
-        "sun": 3,
-        "moon": 1,
+        "sun": 4800,
+        "moon": 4800,
+        "cane": 9600,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 38,
+      "name": "Noctilume",
+      "size": 2,
+      "conditions": [
+        {
+          "id": 20,
+          "amount": 6
+        },
+        {
+          "id": 29,
+          "amount": 6
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 1200,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 1600,
+        "sun": 0,
+        "moon": 0,
         "cane": 0,
-        "wart": 2,
-        "mush": 4,
+        "wart": 0,
+        "mush": 0,
         "cocoa": 0
       }
     },
     {
       "id": 39,
-      "name": "Mutation 40",
+      "name": "Snoozling",
       "size": 3,
       "conditions": [
         {
-          "id": 38,
-          "amount": 1
+          "id": 18,
+          "amount": 3
+        },
+        {
+          "id": 24,
+          "amount": 3
+        },
+        {
+          "id": 28,
+          "amount": 4
+        },
+        {
+          "id": 29,
+          "amount": 3
+        },
+        {
+          "id": 30,
+          "amount": 3
         }
       ],
       "scores": {
-        "wheat": 1,
+        "wheat": 0,
         "carrot": 0,
-        "potato": 2,
-        "cactus": 0,
-        "pumpkin": 6,
-        "melon": 5,
+        "potato": 0,
+        "cactus": 600,
+        "pumpkin": 0,
+        "melon": 0,
         "rose": 0,
-        "sun": 0,
-        "moon": 4,
-        "cane": 0,
-        "wart": 3,
+        "sun": 800,
+        "moon": 800,
+        "cane": 800,
+        "wart": 0,
         "mush": 0,
-        "cocoa": 2
+        "cocoa": 0
       }
     },
     {
       "id": 40,
-      "name": "Mutation 41",
-      "size": 3,
+      "name": "Soggybud",
+      "size": 1,
       "conditions": [
+        {
+          "id": 5,
+          "amount": 8
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 3200,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 41,
+      "name": "Chorus Fruit",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 34,
+          "amount": 5
+        },
+        {
+          "id": 37,
+          "amount": 3
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 1750,
+        "potato": 1500,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 2000,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 42,
+      "name": "PlantBoy Advance",
+      "size": 2,
+      "conditions": [
+        {
+          "id": 39,
+          "amount": 6
+        },
+        {
+          "id": 47,
+          "amount": 6
+        }
+      ],
+      "scores": {
+        "wheat": 1200,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 1200,
+        "moon": 1200,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 43,
+      "name": "Puffercloud",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 35,
+          "amount": 6
+        },
         {
           "id": 39,
           "amount": 2
@@ -1075,184 +1249,148 @@
       ],
       "scores": {
         "wheat": 0,
-        "carrot": 4,
-        "potato": 0,
-        "cactus": 3,
-        "pumpkin": 0,
-        "melon": 6,
-        "rose": 2,
-        "sun": 0,
-        "moon": 0,
-        "cane": 5,
-        "wart": 0,
-        "mush": 1,
-        "cocoa": 3
-      }
-    },
-    {
-      "id": 41,
-      "name": "Mutation 42",
-      "size": 3,
-      "conditions": [
-        {
-          "id": 40,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 4,
         "carrot": 0,
-        "potato": 1,
+        "potato": 0,
         "cactus": 0,
-        "pumpkin": 2,
+        "pumpkin": 0,
         "melon": 0,
-        "rose": 6,
-        "sun": 0,
-        "moon": 3,
+        "rose": 0,
+        "sun": 1400,
+        "moon": 1400,
         "cane": 0,
-        "wart": 2,
-        "mush": 4,
+        "wart": 0,
+        "mush": 1330,
         "cocoa": 0
       }
     },
     {
-      "id": 42,
-      "name": "Mutation 43",
-      "size": 3,
+      "id": 44,
+      "name": "Shellfruit",
+      "size": 1,
       "conditions": [
         {
-          "id": 41,
-          "amount": 2
+          "id": 0,
+          "amount": 99
         }
       ],
       "scores": {
         "wheat": 0,
-        "carrot": 1,
-        "potato": 4,
-        "cactus": 0,
-        "pumpkin": 0,
-        "melon": 0,
-        "rose": 0,
-        "sun": 6,
-        "moon": 2,
-        "cane": 0,
-        "wart": 4,
-        "mush": 0,
-        "cocoa": 5
-      }
-    },
-    {
-      "id": 43,
-      "name": "Mutation 44",
-      "size": 3,
-      "conditions": [
-        {
-          "id": 42,
-          "amount": 1
-        }
-      ],
-      "scores": {
-        "wheat": 2,
         "carrot": 0,
         "potato": 0,
-        "cactus": 4,
+        "cactus": 0,
         "pumpkin": 0,
-        "melon": 1,
-        "rose": 1,
+        "melon": 4000,
+        "rose": 0,
         "sun": 0,
-        "moon": 6,
+        "moon": 0,
         "cane": 0,
         "wart": 0,
-        "mush": 3,
-        "cocoa": 2
-      }
-    },
-    {
-      "id": 44,
-      "name": "Mutation 45",
-      "size": 3,
-      "conditions": [
-        {
-          "id": 43,
-          "amount": 2
-        }
-      ],
-      "scores": {
-        "wheat": 0,
-        "carrot": 3,
-        "potato": 0,
-        "cactus": 0,
-        "pumpkin": 1,
-        "melon": 0,
-        "rose": 0,
-        "sun": 2,
-        "moon": 0,
-        "cane": 6,
-        "wart": 5,
         "mush": 0,
-        "cocoa": 1
+        "cocoa": 2000
       }
     },
     {
       "id": 45,
-      "name": "Mutation 46",
-      "size": 3,
+      "name": "Startlevine",
+      "size": 1,
       "conditions": [
         {
-          "id": 44,
-          "amount": 1
+          "id": 31,
+          "amount": 4
+        },
+        {
+          "id": 33,
+          "amount": 4
         }
       ],
       "scores": {
-        "wheat": 3,
+        "wheat": 0,
         "carrot": 0,
         "potato": 0,
-        "cactus": 1,
+        "cactus": 1500,
         "pumpkin": 0,
         "melon": 0,
         "rose": 0,
         "sun": 0,
-        "moon": 4,
-        "cane": 0,
-        "wart": 6,
-        "mush": 2,
+        "moon": 0,
+        "cane": 2000,
+        "wart": 0,
+        "mush": 0,
         "cocoa": 0
       }
     },
     {
       "id": 46,
-      "name": "Mutation 47",
-      "size": 3,
+      "name": "Stoplight Petal",
+      "size": 1,
       "conditions": [
         {
-          "id": 45,
-          "amount": 2
+          "id": 38,
+          "amount": 4
+        },
+        {
+          "id": 39,
+          "amount": 4
         }
       ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
-        "potato": 3,
-        "cactus": 2,
+        "potato": 0,
+        "cactus": 2400,
         "pumpkin": 0,
         "melon": 0,
-        "rose": 2,
-        "sun": 4,
+        "rose": 3200,
+        "sun": 0,
         "moon": 0,
         "cane": 0,
         "wart": 0,
-        "mush": 6,
-        "cocoa": 4
+        "mush": 0,
+        "cocoa": 0
       }
     },
     {
       "id": 47,
-      "name": "Mutation 48",
-      "size": 3,
+      "name": "Thunderling",
+      "size": 1,
       "conditions": [
         {
-          "id": 46,
-          "amount": 1
+          "id": 38,
+          "amount": 3
+        },
+        {
+          "id": 40,
+          "amount": 5
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 900,
+        "pumpkin": 0,
+        "melon": 2400,
+        "rose": 2400,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 48,
+      "name": "Turtlellini",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 17,
+          "amount": 4
+        },
+        {
+          "id": 40,
+          "amount": 4
         }
       ],
       "scores": {
@@ -1260,61 +1398,195 @@
         "carrot": 0,
         "potato": 0,
         "cactus": 0,
-        "pumpkin": 4,
-        "melon": 2,
-        "rose": 4,
-        "sun": 0,
-        "moon": 0,
-        "cane": 2,
-        "wart": 1,
-        "mush": 0,
-        "cocoa": 6
-      }
-    },
-    {
-      "id": 48,
-      "name": "Mutation 49",
-      "size": 3,
-      "scores": {
-        "wheat": 5,
-        "carrot": 1,
-        "potato": 2,
-        "cactus": 0,
         "pumpkin": 0,
         "melon": 0,
         "rose": 0,
-        "sun": 3,
-        "moon": 1,
+        "sun": 0,
+        "moon": 0,
         "cane": 0,
         "wart": 0,
-        "mush": 2,
+        "mush": 0,
         "cocoa": 0
       }
     },
     {
       "id": 49,
-      "name": "Mutation 50",
-      "size": 3,
+      "name": "Zombud",
+      "size": 1,
       "conditions": [
         {
-          "id": 48,
-          "amount": 1
+          "id": 14,
+          "amount": 4
+        },
+        {
+          "id": 26,
+          "amount": 2
+        },
+        {
+          "id": 36,
+          "amount": 2
         }
       ],
       "scores": {
         "wheat": 0,
         "carrot": 0,
-        "potato": 1,
-        "cactus": 3,
-        "pumpkin": 0,
-        "melon": 4,
-        "rose": 1,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 1190,
+        "melon": 0,
+        "rose": 2800,
         "sun": 0,
         "moon": 0,
         "cane": 0,
-        "wart": 2,
+        "wart": 0,
         "mush": 0,
-        "cocoa": 7
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 50,
+      "name": "All-in Aloe",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 37,
+          "amount": 6
+        },
+        {
+          "id": 42,
+          "amount": 2
+        }
+      ],
+      "scores": {
+        "wheat": 200,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 200,
+        "moon": 200,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 51,
+      "name": "Godseed",
+      "size": 3,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 246,
+        "carrot": 862,
+        "potato": 738,
+        "cactus": 369,
+        "pumpkin": 209,
+        "melon": 985,
+        "rose": 492,
+        "sun": 492,
+        "moon": 492,
+        "cane": 492,
+        "wart": 738,
+        "mush": 234,
+        "cocoa": 492
+      }
+    },
+    {
+      "id": 52,
+      "name": "Jerryflower",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 0,
+          "amount": 99
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 53,
+      "name": "Phantomleaf",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 41,
+          "amount": 4
+        },
+        {
+          "id": 44,
+          "amount": 4
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 5600,
+        "potato": 4800,
+        "cactus": 0,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 0,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
+      }
+    },
+    {
+      "id": 54,
+      "name": "Timestalk",
+      "size": 1,
+      "conditions": [
+        {
+          "id": 41,
+          "amount": 2
+        },
+        {
+          "id": 44,
+          "amount": 2
+        },
+        {
+          "id": 46,
+          "amount": 4
+        }
+      ],
+      "scores": {
+        "wheat": 0,
+        "carrot": 0,
+        "potato": 0,
+        "cactus": 3000,
+        "pumpkin": 0,
+        "melon": 0,
+        "rose": 0,
+        "sun": 0,
+        "moon": 0,
+        "cane": 4000,
+        "wart": 0,
+        "mush": 0,
+        "cocoa": 0
       }
     }
   ]

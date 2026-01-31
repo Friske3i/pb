@@ -5,6 +5,7 @@
   let searchQuery = '';
   let dependencyHighlightId = null;
   let lastScrollTop = 0;
+  let isMouseDown = false;
 
   function init() {
     window.Game.loadConfig()
@@ -195,6 +196,7 @@
           div.textContent = '';
         } else {
           const isOrigin = cell.originRow === r && cell.originCol === c;
+          if (isOrigin) div.classList.add('origin');
           if (cell.isPlayerPlaced) div.classList.add('player');
           else div.classList.add('spawn');
           if (cell.size > 1) div.classList.add('size-' + cell.size);
@@ -247,19 +249,42 @@
     }
 
     boardEl.querySelectorAll('.cell').forEach(function (el) {
-      el.addEventListener('click', function () {
-        onCellClick(parseInt(el.dataset.row, 10), parseInt(el.dataset.col, 10));
+      el.addEventListener('mousedown', function () {
+        onCellClick(parseInt(el.dataset.row, 10), parseInt(el.dataset.col, 10), false);
+      });
+      el.addEventListener('mouseenter', function () {
+        if (isMouseDown) {
+          onCellClick(parseInt(el.dataset.row, 10), parseInt(el.dataset.col, 10), true);
+        }
       });
     });
   }
 
-  function onCellClick(row, col) {
+  function onCellClick(row, col, isDrag) {
     if (destroyMode) {
       window.Game.destroyCard(state, row, col);
       renderAll();
       return;
     }
     if (state.selectedCardTypeId === null) return;
+
+    // ドラッグ時はサイズ2以上のカードを上書きしない
+    if (isDrag) {
+      const card = state.cardTypes[state.selectedCardTypeId];
+      const size = card ? card.size : 1;
+      const boardSize = window.Game.BOARD_SIZE;
+
+      for (let r = row; r < row + size; r++) {
+        for (let c = col; c < col + size; c++) {
+          if (r >= boardSize || c >= boardSize) continue;
+          const cell = state.board[r][c];
+          if (cell && cell.size >= 2) {
+            return; // 保護
+          }
+        }
+      }
+    }
+
     const ok = window.Game.placeCard(state, row, col, state.selectedCardTypeId);
     if (ok) renderAll();
   }
@@ -348,6 +373,8 @@
   }
 
   function bindEvents() {
+    document.addEventListener('mousedown', () => isMouseDown = true);
+    document.addEventListener('mouseup', () => isMouseDown = false);
     document.getElementById('progressBtn').addEventListener('click', onProgressClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
     document.getElementById('clearAllBtn').addEventListener('click', clearAll);

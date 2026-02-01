@@ -114,6 +114,7 @@ function createGameState(config) {
     selectedMutationId: null,
     placementIdCounter: 0,
     simulationMode: false, // シミュレーションモード（成長段階システム）
+    evaluationMode: false, // 評価モード（状態無視でスコア計算）
     history: [],
     historyIndex: -1,
     // Advanced Score Factors
@@ -127,19 +128,20 @@ function createGameState(config) {
 }
 
 // 個別のセルのスコアを計算
-function calculateCellScore(cell, mutation, scoreParamIndex, simulationMode) {
+function calculateCellScore(cell, mutation, scoreParamIndex, simulationMode, evaluationMode) {
   let baseScore = mutation.params[scoreParamIndex] ?? 0;
 
   if (!simulationMode) {
-    // Standard mode: Player placed items don't score
-    if (cell.isPlayerPlaced) return 0;
+    // Evaluation Mode: Ignore player placed check
+    if (cell.isPlayerPlaced && !evaluationMode) return 0;
     return baseScore;
   }
 
   // Simulation Mode
 
   // Player placed mutated items don't score (uncollectable)
-  if (cell.isPlayerPlaced && mutation.category === 'mutated') return 0;
+  // Evaluation Mode: Ignore this
+  if (cell.isPlayerPlaced && mutation.category === 'mutated' && !evaluationMode) return 0;
 
   const growthStage = cell.growthStage || 0;
 
@@ -151,14 +153,14 @@ function calculateCellScore(cell, mutation, scoreParamIndex, simulationMode) {
 
   // Glasscorn: 7,8 are fully grown (yields score). Max is 9 (loops back to 1).
   if (mutation.specialEffect === 'glasscorn') {
-    if (growthStage !== 7 && growthStage !== 8) return 0;
+    if (growthStage !== 7 && growthStage !== 8 && !evaluationMode) return 0;
     return baseScore;
   }
 
   // Normal crops
   const maxGrowthStage = mutation.maxGrowthStage !== undefined ? mutation.maxGrowthStage : 1;
   // If maxGrowthStage is 0, it's always fully grown
-  if (maxGrowthStage > 0 && growthStage < maxGrowthStage) return 0;
+  if (maxGrowthStage > 0 && growthStage < maxGrowthStage && !evaluationMode) return 0;
 
   return baseScore;
 }
@@ -177,7 +179,7 @@ function calculateScore(state) {
       counted.add(key);
 
       const mutation = state.mutationTypes[cell.mutationId];
-      total += calculateCellScore(cell, mutation, state.scoreParamIndex, state.simulationMode);
+      total += calculateCellScore(cell, mutation, state.scoreParamIndex, state.simulationMode, state.evaluationMode);
     }
   }
 

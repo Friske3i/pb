@@ -16,58 +16,6 @@
   <div class="app">
     <header class="header">
       <h1>Mutation Planner</h1>
-      <div class="score-row">
-        <span class="score-label">Crop:
-          <select id="scoreParamSelector" class="score-selector">
-            <!-- 動的に生成 -->
-          </select>
-        </span>
-        <span class="score-value">Base Yield: <strong id="baseScoreValue">0</strong></span>
-
-        <label class="score-input-label">
-          FF:
-          <input type="number" id="fortuneInput" value="0" min="0" class="percent-input">
-        </label>
-        <label class="score-input-label">
-          Chip:
-          <input type="number" id="chipInput" value="0" min="0" class="percent-input"> %
-        </label>
-        <label class="score-input-label">
-          GH:
-          <select id="ghUpgradeSelect" class="percent-input" style="width: auto;">
-            <option value="0">0 (0%)</option>
-            <option value="1">1 (2%)</option>
-            <option value="2">2 (4%)</option>
-            <option value="3">3 (6%)</option>
-            <option value="4">4 (8%)</option>
-            <option value="5">5 (10%)</option>
-            <option value="6">6 (12%)</option>
-            <option value="7">7 (14%)</option>
-            <option value="8">8 (16%)</option>
-            <option value="9">9 (20%)</option>
-          </select>
-        </label>
-        <label class="score-input-label">
-          Unique:
-          <select id="uniqueBuffSelect" class="percent-input" style="width: auto;">
-            <option value="0">0 (0%)</option>
-            <option value="1">1 (3%)</option>
-            <option value="2">2 (6%)</option>
-            <option value="3">3 (9%)</option>
-            <option value="4">4 (12%)</option>
-            <option value="5">5 (15%)</option>
-            <option value="6">6 (18%)</option>
-            <option value="7">7 (21%)</option>
-            <option value="8">8 (24%)</option>
-            <option value="9">9 (27%)</option>
-            <option value="10">10 (30%)</option>
-            <option value="11">11 (33%)</option>
-            <option value="12">12 (36%)</option>
-          </select>
-        </label>
-
-        <span class="score-value final-score">Final Yield: <strong id="finalScoreValue">0</strong></span>
-      </div>
     </header>
 
     <main class="main">
@@ -113,14 +61,16 @@
             </svg>
             <span>Copy Image</span>
           </button>
-          <div class="simulation-toggle-wrapper">
-            <label class="toggle-switch">
-              <input type="checkbox" id="simulationModeToggle">
-              <span class="slider"></span>
-            </label>
-            <span class="toggle-label">Simulation Mode</span>
+
+          <div class="control-group" style="margin-top: 1rem;">
+            <span class="score-label">Crop:
+              <select id="scoreParamSelector" class="score-selector" style="width: 100%;">
+                <!-- 動的に生成 -->
+              </select>
+            </span>
           </div>
-          <div class="search-container">
+
+          <div class="search-container" style="margin-top: 1rem;">
             <input type="text" id="mutationSearch" placeholder="Search..." class="search-input">
           </div>
           <div id="mutationList" class="mutation-list"></div>
@@ -134,6 +84,70 @@
         <div id="board" class="board" data-size="10"></div>
         <div id="mutationStats" class="mutation-stats"></div>
       </div>
+
+      <aside class="right-sidebar">
+        <section class="panel control-panel">
+          <h2>Controls</h2>
+
+          <div class="control-group">
+            <h3>Modes</h3>
+            <div class="simulation-toggle-wrapper">
+              <label class="toggle-switch">
+                <input type="checkbox" id="simulationModeToggle">
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label">Simulation</span>
+            </div>
+            <div class="simulation-toggle-wrapper">
+              <label class="toggle-switch">
+                <input type="checkbox" id="evaluationModeToggle">
+                <span class="slider"></span>
+              </label>
+              <span class="toggle-label">Evaluation</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Score Base</h3>
+            <div class="score-row-vertical">
+              <span class="score-value">Base: <strong id="baseScoreValue">0</strong></span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <h3>Yield Buffs</h3>
+
+            <label class="score-input-label-vertical">
+              <span>FF: <input type="number" id="fortuneInput" value="0" min="0" class="percent-input-small"></span>
+            </label>
+
+            <label class="score-input-label-vertical">
+              <span>Chip (%): <input type="number" id="chipInput" value="0" min="0" class="percent-input-small"></span>
+            </label>
+
+            <label class="score-input-label-vertical">
+              <div class="slider-header">
+                <span>GH:</span>
+                <span id="ghValueDisplay">0 (0%)</span>
+              </div>
+              <input type="range" id="ghUpgradeSlider" min="0" max="9" value="0" class="slider-input">
+            </label>
+
+            <label class="score-input-label-vertical">
+              <div class="slider-header">
+                <span>Unique:</span>
+                <span id="uniqueValueDisplay">0 (0%)</span>
+              </div>
+              <input type="range" id="uniqueBuffSlider" min="0" max="12" value="0" class="slider-input">
+            </label>
+
+            <div class="final-score-box">
+              <span>Yield</span>
+              <strong id="finalScoreValue">0</strong>
+            </div>
+          </div>
+        </section>
+      </aside>
     </main>
   </div>
 

@@ -21,8 +21,16 @@
         // Sync UI inputs with state default
         document.getElementById('fortuneInput').value = state.fortune || 0;
         document.getElementById('chipInput').value = state.chips || 0;
-        document.getElementById('ghUpgradeSelect').value = state.ghUpgrade || 0;
-        document.getElementById('uniqueBuffSelect').value = state.uniqueBuff || 0;
+        document.getElementById('fortuneInput').value = state.fortune || 0;
+        document.getElementById('chipInput').value = state.chips || 0;
+
+        const gh = state.ghUpgrade || 0;
+        document.getElementById('ghUpgradeSlider').value = gh;
+        document.getElementById('ghValueDisplay').textContent = `${gh} (${gh >= 9 ? 20 : gh * 2}%)`;
+
+        const unique = state.uniqueBuff || 0;
+        document.getElementById('uniqueBuffSlider').value = unique;
+        document.getElementById('uniqueValueDisplay').textContent = `${unique} (${Math.min(unique * 3, 36)}%)`;
 
         renderAll();
         bindEvents();
@@ -950,6 +958,10 @@
       state.simulationMode = e.target.checked;
       renderAll(); // 全体を再描画してスコアや成長段階などを更新
     });
+    document.getElementById('evaluationModeToggle').addEventListener('change', function (e) {
+      state.evaluationMode = e.target.checked;
+      renderAll();
+    });
 
     // Score Inputs
     document.getElementById('fortuneInput').addEventListener('input', (e) => {
@@ -962,14 +974,24 @@
       state.chips = isNaN(val) ? 0 : val;
       renderAll();
     });
-    document.getElementById('ghUpgradeSelect').addEventListener('change', (e) => {
+    document.getElementById('ghUpgradeSlider').addEventListener('input', (e) => {
       const val = parseInt(e.target.value, 10);
       state.ghUpgrade = isNaN(val) ? 0 : val;
+
+      // Update Display
+      const ghPercent = (val >= 9) ? 20 : (val * 2);
+      document.getElementById('ghValueDisplay').textContent = `${val} (${ghPercent}%)`;
+
       renderAll();
     });
-    document.getElementById('uniqueBuffSelect').addEventListener('change', (e) => {
+    document.getElementById('uniqueBuffSlider').addEventListener('input', (e) => {
       const val = parseInt(e.target.value, 10);
       state.uniqueBuff = isNaN(val) ? 0 : val;
+
+      // Update Display
+      const uniquePercent = Math.min(val * 3, 36);
+      document.getElementById('uniqueValueDisplay').textContent = `${val} (${uniquePercent}%)`;
+
       renderAll();
     });
 

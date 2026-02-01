@@ -521,23 +521,24 @@ img {
 
 /* Custom Tooltip */
 .tooltip {
-  position: fixed;
-  pointer-events: none;
+  position: absolute;
   background: rgba(22, 22, 30, 0.95);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 12px;
+  pointer-events: none;
   z-index: 1000;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  display: none;
-  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(4px);
-  transform: translate(10px, 10px);
+  min-width: 200px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  color: var(--text);
+  font-size: 0.9rem;
 }
 
 .tooltip.visible {
-  display: block;
-  animation: fadeIn 0.1s ease-out;
+  opacity: 1;
 }
 
 @keyframes fadeIn {
@@ -554,28 +555,39 @@ img {
 
 .tooltip-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  align-items: center;
   margin-bottom: 8px;
   padding-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .tooltip-title {
-  font-weight: 700;
-  color: #fff;
+  font-weight: 600;
+  color: var(--accent);
   font-size: 1rem;
 }
 
 .tooltip-score {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--score);
 }
 
+.tooltip-final-score {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--player);
+  /* Use player color (purple) for distinction, or maybe a gold color */
+  text-align: right;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 8px;
+}
+
 .tooltip-body {
-  font-size: 0.85rem;
-  color: #a0a8c0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .tooltip-row {

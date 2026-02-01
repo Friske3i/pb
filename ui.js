@@ -22,6 +22,7 @@
         document.getElementById('fortuneInput').value = state.fortune || 0;
         document.getElementById('chipInput').value = state.chips || 0;
         document.getElementById('ghUpgradeSelect').value = state.ghUpgrade || 0;
+        document.getElementById('uniqueBuffSelect').value = state.uniqueBuff || 0;
 
         renderAll();
         bindEvents();
@@ -230,7 +231,28 @@
 
           if (isOrigin) {
             div.dataset.tooltipTitle = mutation.name || ('#' + (cell.mutationId + 1));
-            div.dataset.tooltipScore = score;
+            div.dataset.tooltipScore = score; // This is Base Score (with internal multipliers like Jerrybean)
+
+            // Calculate Final Score for Tooltip
+            const additiveBase = state.additiveBuff ?? 1;
+            const chipFactor = 1 + ((state.chips ?? 0) / 100);
+            const fortuneFactor = 1 + ((state.fortune ?? 0) / 100);
+
+            // GH Upgrade: 0-9 (Additive)
+            const ghLvl = state.ghUpgrade || 0;
+            const ghPercent = (ghLvl >= 9) ? 20 : (ghLvl * 2);
+            const additiveTotal = additiveBase + (ghPercent / 100);
+
+            // Unique Buff: 0-12 (Multi)
+            const uniqueLvl = state.uniqueBuff || 0;
+            const uniquePercent = Math.min(uniqueLvl * 3, 36);
+            const uniqueFactor = 1 + (uniquePercent / 100);
+
+            const multiBase = state.multiBuff ?? 1;
+
+            const finalScore = Math.floor(score * additiveTotal * chipFactor * fortuneFactor * uniqueFactor * multiBase);
+            div.dataset.tooltipFinalScore = finalScore;
+
             div.dataset.tooltipSize = mutation.size + '×' + mutation.size;
 
             // 成長段階情報をツールチップ用に追加
@@ -709,8 +731,12 @@
     let html = `
       <div class="tooltip-header">
         <span class="tooltip-title">${title}</span>
-        <span class="tooltip-score">Score: ${score}</span>
+        <span class="tooltip-score">Base: ${score}</span>
       </div>
+      ${target.dataset.tooltipFinalScore ? `
+      <div class="tooltip-final-score">
+         Yield: ${target.dataset.tooltipFinalScore}
+      </div>` : ''}
       <div class="tooltip-body">
         <div class="tooltip-row">
           <span>Size:</span>
@@ -929,17 +955,22 @@
     document.getElementById('fortuneInput').addEventListener('input', (e) => {
       const val = parseInt(e.target.value, 10);
       state.fortune = isNaN(val) ? 0 : val;
-      renderScore();
+      renderAll();
     });
     document.getElementById('chipInput').addEventListener('input', (e) => {
       const val = parseInt(e.target.value, 10);
       state.chips = isNaN(val) ? 0 : val;
-      renderScore();
+      renderAll();
     });
     document.getElementById('ghUpgradeSelect').addEventListener('change', (e) => {
       const val = parseInt(e.target.value, 10);
       state.ghUpgrade = isNaN(val) ? 0 : val;
-      renderScore();
+      renderAll();
+    });
+    document.getElementById('uniqueBuffSelect').addEventListener('change', (e) => {
+      const val = parseInt(e.target.value, 10);
+      state.uniqueBuff = isNaN(val) ? 0 : val;
+      renderAll();
     });
 
     // ボードのイベント委譲（重複を防ぐ）

@@ -120,6 +120,7 @@ function createGameState(config) {
     fortune: 0,
     chips: 0,
     ghUpgrade: 0, // 0-9
+    uniqueBuff: 0, // 0-12
     additiveBuff: 1,
     multiBuff: 1
   };
@@ -191,22 +192,32 @@ function calculateScore(state) {
   // Final = Base * Additive * (1 + Chip/100) * (1 + Fortune/100) * Multi
 
   // Ensure default values if undefined (for old states/saves compatibility)
-  const additive = state.additiveBuff ?? 1;
+  const additiveBase = state.additiveBuff ?? 1;
   const chipFactor = 1 + ((state.chips ?? 0) / 100);
   const fortuneFactor = 1 + ((state.fortune ?? 0) / 100);
 
-  // GH Upgrade: 0-9
-  // 0:0%, 1:2%, 2:4%, 3:6%, 4:8%, 5:10%, 6:12%, 7:14%, 8:16%, 9:20%
+  // GH Upgrade: 0-9 (NOW ADDITIVE)
+  // 0:0%, 1:2% ... 9:20%
   const ghLvl = state.ghUpgrade || 0;
   let ghPercent = 0;
-  if (ghLvl >= 9) {
-    ghPercent = 20;
-  } else {
-    ghPercent = ghLvl * 2;
-  }
-  const multi = 1 + (ghPercent / 100);
+  if (ghLvl >= 9) ghPercent = 20;
+  else ghPercent = ghLvl * 2;
 
-  const finalYield = Math.floor(baseYield * additive * chipFactor * fortuneFactor * multi);
+  // Additive total = base(1) + ghUpgrade
+  const additiveTotal = additiveBase + (ghPercent / 100);
+
+  // Unique Buff: 0-12 (Multi)
+  // 0-36%, so 3% per level? 
+  // 12 * 3 = 36. So yes, 3% step.
+  const uniqueLvl = state.uniqueBuff || 0;
+  let uniquePercent = uniqueLvl * 3;
+  if (uniquePercent > 36) uniquePercent = 36;
+  const uniqueFactor = 1 + (uniquePercent / 100);
+
+  const multiBase = state.multiBuff ?? 1;
+
+  // Final = Base * (AdditiveTotal) * Chip * Fortune * Unique * MultiBase
+  const finalYield = Math.floor(baseYield * additiveTotal * chipFactor * fortuneFactor * uniqueFactor * multiBase);
 
   return {
     base: baseYield,

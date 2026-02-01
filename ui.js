@@ -235,7 +235,7 @@
           if (cell.size > 1) div.classList.add('size-' + cell.size);
           const mutation = state.mutationTypes[cell.mutationId];
 
-          let score = window.Game.calculateCellScore(cell, mutation, state.scoreParamIndex, state.simulationMode);
+          let score = window.Game.calculateCellScore(cell, mutation, state.scoreParamIndex, state.simulationMode, state.evaluationMode);
 
           if (isOrigin) {
             div.dataset.tooltipTitle = mutation.name || ('#' + (cell.mutationId + 1));

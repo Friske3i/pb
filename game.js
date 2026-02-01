@@ -131,9 +131,8 @@ function createGameState(config) {
 function calculateCellScore(cell, mutation, scoreParamIndex, simulationMode, evaluationMode) {
   let baseScore = mutation.params[scoreParamIndex] ?? 0;
 
-  if (!simulationMode) {
-    // Evaluation Mode: Ignore player placed check
-    if (cell.isPlayerPlaced && !evaluationMode) return 0;
+  if (!simulationMode && !evaluationMode) {
+    if (cell.isPlayerPlaced) return 0;
     return baseScore;
   }
 
@@ -261,6 +260,11 @@ function placeMutation(state, row, col, mutationId) {
   } else {
     // 非シミュレーションモード: 常に最大値（成長完了状態）
     growthStage = mutation.maxGrowthStage;
+  }
+
+  // Magic Jerrybean: Always start at stage 120 (8x multiplier) when player placed
+  if (mutation.specialEffect === 'magic_jerrybean') {
+    growthStage = 120;
   }
 
   const placementId = state.placementIdCounter++;

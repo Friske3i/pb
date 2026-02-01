@@ -345,6 +345,9 @@ function progress(state) {
     const size = mutation.size;
     for (const { r, c } of emptyCells) {
       if (isEmptyAndSatisfiesCondition(state.board, r, c, mutation.conditions, size)) {
+        // 25% chance to spawn
+        if (Math.random() > 0.25) continue;
+
         if (isAreaEmpty(state.board, r, c, size)) {
           const placementId = state.placementIdCounter++;
           for (let dr = 0; dr < size; dr++) {

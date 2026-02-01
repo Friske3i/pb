@@ -478,54 +478,138 @@ window.Game = {
   getBoard(state) { return state.board; },
   getScoreParam(state) { return { index: state.scoreParamIndex, name: state.scoreParamName }; },
 
-  // 盤面を文字列化 (Base64 encoded JSON of 10x10 simplified grid)
+  // 盤面を文字列化 (Run-Length Encoded Binary -> Base64)
+  // Format: [Value, Count], [Value, Count]... where Value=255 means empty/skip
+  // Value 0-127: Spawned Mutation ID
+  // Value 128-254: Player Placed Mutation ID (ID + 128)
   exportBoard(state) {
-    const simplified = state.board.map(row =>
-      row.map(cell => {
-        // 重複配置や部分的なセルを避けるため、OriginのみIDを記録
-        if (!cell) return -1;
-        if (cell.originRow === cell.row && cell.originCol === cell.col) {
-          return cell.mutationId;
+    const flat = [];
+    const boardSize = window.Game.BOARD_SIZE;
+
+    // 1. Flatten board to array of IDs (255 for empty/non-origin)
+    for (let r = 0; r < boardSize; r++) {
+      for (let c = 0; c < boardSize; c++) {
+        const cell = state.board[r][c];
+        if (!cell) {
+          flat.push(255); // Empty
+        } else if (cell.originRow === r && cell.originCol === c) {
+          // Origin: check if ID fits in byte
+          const id = cell.mutationId;
+          if (id >= 127) {
+            console.warn('Mutation ID too large for byte encoding with flag:', id);
+            flat.push(255); // Fallback to empty to avoid corruption
+          } else {
+            let val = id;
+            // プレイヤー設置フラグをMSB(0x80)に格納
+            if (cell.isPlayerPlaced) {
+              val |= 0x80;
+            }
+            flat.push(val);
+          }
+        } else {
+          flat.push(255); // Occupied by neighbor (skip)
         }
-        return -1; // Origin以外は無視 (復元時に再配置されるため)
-      })
-    );
-    try {
-      const json = JSON.stringify(simplified);
-      return btoa(json);
-    } catch (e) {
-      console.error('Export failed', e);
-      return '';
+      }
     }
+
+    // 2. Run-Length Encoding
+    const rle = [];
+    if (flat.length > 0) {
+      let currentVal = flat[0];
+      let count = 1;
+
+      for (let i = 1; i < flat.length; i++) {
+        // Max count per byte is 255
+        if (flat[i] === currentVal && count < 255) {
+          count++;
+        } else {
+          rle.push(currentVal, count);
+          currentVal = flat[i];
+          count = 1;
+        }
+      }
+      rle.push(currentVal, count);
+    }
+
+    // 3. Convert to Binary String
+    // rle array contains 0-255 integers.
+    let binary = '';
+    const len = rle.length;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(rle[i]);
+    }
+
+    // 4. Base64 Encode
+    return btoa(binary);
   },
 
   // 文字列から盤面を読み込む
   importBoard(state, encodedStr) {
     try {
-      const json = atob(encodedStr);
-      const simplified = JSON.parse(json);
+      // 1. Decode Base64 to Binary String
+      const binary = atob(encodedStr);
 
-      if (!Array.isArray(simplified) || simplified.length !== BOARD_SIZE) {
-        throw new Error('Invalid board data');
+      // 2. Decode RLE to Flat Array
+      const flat = [];
+      for (let i = 0; i < binary.length; i += 2) {
+        if (i + 1 >= binary.length) break;
+        const val = binary.charCodeAt(i);
+        const count = binary.charCodeAt(i + 1);
+
+        for (let k = 0; k < count; k++) {
+          flat.push(val);
+        }
       }
 
-      // 盤面をクリア in-place
+      const boardSize = window.Game.BOARD_SIZE;
+      if (flat.length !== boardSize * boardSize) {
+        // Warning: length mismatch, might be resize or corruption.
+        // We'll try to load as much as possible or fail.
+        // Let's assume fail for safety if significantly off, but lenient if just last empty missing?
+        // RLE should be exact.
+        if (flat.length < boardSize * boardSize) {
+          // Pad with empty
+          while (flat.length < boardSize * boardSize) flat.push(255);
+        }
+      }
+
+      // 3. Reconstruct Board
       state.board = createEmptyBoard();
       state.placementIdCounter = 0;
 
-      // 配置の復元
-      for (let r = 0; r < BOARD_SIZE; r++) {
-        for (let c = 0; c < BOARD_SIZE; c++) {
-          const id = simplified[r][c];
-          if (id !== -1 && id !== null) {
-            // Mutationが存在するか確認
+      for (let r = 0; r < boardSize; r++) {
+        for (let c = 0; c < boardSize; c++) {
+          const idx = r * boardSize + c;
+          const val = flat[idx];
+
+          if (val !== 255) {
+            // MSBをチェックしてプレイヤー設置フラグを取得
+            const isPlayerPlaced = (val & 0x80) !== 0;
+            const id = val & 0x7F;
+
+            // Try to place
             if (state.mutationTypes[id]) {
               placeMutation(state, r, c, id);
+
+              // placeMutationはデフォルトでisPlayerPlaced=trueにするため、
+              // 必要なら上書きする (falseの場合、または明示的にtrueの場合も念のため)
+              // placeMutationで生成されたセル(サイズ分)全て更新する
+              const cell = state.board[r][c];
+              if (cell) {
+                const size = cell.size;
+                for (let dr = 0; dr < size; dr++) {
+                  for (let dc = 0; dc < size; dc++) {
+                    if (state.board[r + dr] && state.board[r + dr][c + dc]) {
+                      state.board[r + dr][c + dc].isPlayerPlaced = isPlayerPlaced;
+                    }
+                  }
+                }
+              }
             }
           }
         }
       }
-      // 履歴もリセットしたほうが安全かも？
+
       saveInitialState(state);
       return true;
     } catch (e) {

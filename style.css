@@ -79,6 +79,31 @@ body {
   font-size: 1.25rem;
 }
 
+.score-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.score-input-label .percent-input {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: 60px;
+  text-align: right;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.score-input-label .percent-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 .main {
   display: flex;
   gap: 1.5rem;

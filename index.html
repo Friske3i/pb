@@ -22,7 +22,33 @@
             <!-- 動的に生成 -->
           </select>
         </span>
-        <span class="score-value">Base Yield: <strong id="scoreValue">0</strong></span>
+        <span class="score-value">Base Yield: <strong id="baseScoreValue">0</strong></span>
+
+        <label class="score-input-label">
+          FF:
+          <input type="number" id="fortuneInput" value="0" min="0" class="percent-input">
+        </label>
+        <label class="score-input-label">
+          Chip:
+          <input type="number" id="chipInput" value="0" min="0" class="percent-input"> %
+        </label>
+        <label class="score-input-label">
+          GH:
+          <select id="ghUpgradeSelect" class="percent-input" style="width: auto;">
+            <option value="0">0 (0%)</option>
+            <option value="1">1 (2%)</option>
+            <option value="2">2 (4%)</option>
+            <option value="3">3 (6%)</option>
+            <option value="4">4 (8%)</option>
+            <option value="5">5 (10%)</option>
+            <option value="6">6 (12%)</option>
+            <option value="7">7 (14%)</option>
+            <option value="8">8 (16%)</option>
+            <option value="9">9 (20%)</option>
+          </select>
+        </label>
+
+        <span class="score-value final-score">Final Yield: <strong id="finalScoreValue">0</strong></span>
       </div>
     </header>
 

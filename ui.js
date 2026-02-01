@@ -15,6 +15,14 @@
         destroyMode = false;
         // 初期状態を履歴に保存
         window.Game.saveInitialState(state);
+        // 初期状態を履歴に保存
+        window.Game.saveInitialState(state);
+
+        // Sync UI inputs with state default
+        document.getElementById('fortuneInput').value = state.fortune || 0;
+        document.getElementById('chipInput').value = state.chips || 0;
+        document.getElementById('ghUpgradeSelect').value = state.ghUpgrade || 0;
+
         renderAll();
         bindEvents();
       })
@@ -54,8 +62,18 @@
   }
 
   function renderScore() {
-    const score = window.Game.calculateScore(state);
-    document.getElementById('scoreValue').textContent = score;
+    const scores = window.Game.calculateScore(state);
+    const baseEl = document.getElementById('baseScoreValue');
+    const finalEl = document.getElementById('finalScoreValue');
+
+    // Support previous number return type just in case, though we just changed it
+    if (typeof scores === 'number') {
+      if (baseEl) baseEl.textContent = scores;
+      if (finalEl) finalEl.textContent = scores;
+    } else {
+      if (baseEl) baseEl.textContent = scores.base;
+      if (finalEl) finalEl.textContent = scores.final;
+    }
   }
 
   function renderSpawnHint() {
@@ -905,6 +923,23 @@
     document.getElementById('simulationModeToggle').addEventListener('change', function (e) {
       state.simulationMode = e.target.checked;
       renderAll(); // 全体を再描画してスコアや成長段階などを更新
+    });
+
+    // Score Inputs
+    document.getElementById('fortuneInput').addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      state.fortune = isNaN(val) ? 0 : val;
+      renderScore();
+    });
+    document.getElementById('chipInput').addEventListener('input', (e) => {
+      const val = parseInt(e.target.value, 10);
+      state.chips = isNaN(val) ? 0 : val;
+      renderScore();
+    });
+    document.getElementById('ghUpgradeSelect').addEventListener('change', (e) => {
+      const val = parseInt(e.target.value, 10);
+      state.ghUpgrade = isNaN(val) ? 0 : val;
+      renderScore();
     });
 
     // ボードのイベント委譲（重複を防ぐ）

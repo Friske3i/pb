@@ -115,7 +115,13 @@ function createGameState(config) {
     placementIdCounter: 0,
     simulationMode: false, // シミュレーションモード（成長段階システム）
     history: [],
-    historyIndex: -1
+    historyIndex: -1,
+    // Advanced Score Factors
+    fortune: 0,
+    chips: 0,
+    ghUpgrade: 0, // 0-9
+    additiveBuff: 1,
+    multiBuff: 1
   };
 }
 
@@ -173,7 +179,39 @@ function calculateScore(state) {
       total += calculateCellScore(cell, mutation, state.scoreParamIndex, state.simulationMode);
     }
   }
-  return total;
+
+  // total is simply the sum of individual cell scores (which already include multipliers if any)
+  // However, wait. calculateCellScore ALREADY applies multipliers for Magic Jerrybean. 
+  // But here we are applying GLOBAL multipliers (Buffs, Fortune, Chips).
+  // So 'total' so far is the "Base Yield" from crops (including their internal multipliers like Jerrybean).
+
+  const baseYield = total;
+
+  // Apply Advanced Factors
+  // Final = Base * Additive * (1 + Chip/100) * (1 + Fortune/100) * Multi
+
+  // Ensure default values if undefined (for old states/saves compatibility)
+  const additive = state.additiveBuff ?? 1;
+  const chipFactor = 1 + ((state.chips ?? 0) / 100);
+  const fortuneFactor = 1 + ((state.fortune ?? 0) / 100);
+
+  // GH Upgrade: 0-9
+  // 0:0%, 1:2%, 2:4%, 3:6%, 4:8%, 5:10%, 6:12%, 7:14%, 8:16%, 9:20%
+  const ghLvl = state.ghUpgrade || 0;
+  let ghPercent = 0;
+  if (ghLvl >= 9) {
+    ghPercent = 20;
+  } else {
+    ghPercent = ghLvl * 2;
+  }
+  const multi = 1 + (ghPercent / 100);
+
+  const finalYield = Math.floor(baseYield * additive * chipFactor * fortuneFactor * multi);
+
+  return {
+    base: baseYield,
+    final: finalYield
+  };
 }
 
 function placeMutation(state, row, col, mutationId) {

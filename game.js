@@ -343,34 +343,54 @@ function progress(state) {
   }
   shuffle(emptyCells);
 
-  // 各カードタイプについて、出現条件を満たす空きセルを探す
-  for (const mutation of state.mutationTypes) {
-    if (!mutation.conditions || mutation.conditions.length === 0) continue;
-    const size = mutation.size;
-    for (const { r, c } of emptyCells) {
-      if (isEmptyAndSatisfiesCondition(state.board, r, c, mutation.conditions, size)) {
-        // 25% chance to spawn
-        if (Math.random() > 0.25) continue;
+  // 各空きセルに対して、発生条件を満たすMutationを探す
+  for (const { r, c } of emptyCells) {
+    // 処理中に埋まってしまった場合はスキップ
+    if (state.board[r][c] !== null) continue;
 
+    const candidates = [];
+
+    for (const mutation of state.mutationTypes) {
+      if (!mutation.conditions || mutation.conditions.length === 0) continue;
+
+      const size = mutation.size;
+      // まず条件と空き領域チェック
+      if (isEmptyAndSatisfiesCondition(state.board, r, c, mutation.conditions, size)) {
         if (isAreaEmpty(state.board, r, c, size)) {
-          const placementId = state.placementIdCounter++;
-          for (let dr = 0; dr < size; dr++) {
-            for (let dc = 0; dc < size; dc++) {
-              state.board[r + dr][c + dc] = {
-                mutationId: mutation.id,
-                isPlayerPlaced: false,
-                growthStage: 0, // 自然発生は常に成長段階0から開始
-                originRow: r,
-                originCol: c,
-                size,
-                placementId,
-                row: r + dr,
-                col: c + dc
-              };
-            }
-          }
-          // break; // 同種のMutationでも複数発生できるようにするため削除
+          candidates.push(mutation);
         }
+      }
+    }
+
+    if (candidates.length === 0) continue;
+
+    // IDの降順（高いID優先）でソート
+    candidates.sort((a, b) => b.id - a.id);
+    const bestMutation = candidates[0];
+
+    // 確率判定
+    // Simulation Mode: 25%
+    // Non-Simulation Mode: 100%
+    if (state.simulationMode) {
+      if (Math.random() > 0.25) continue;
+    }
+
+    // 配置実行
+    const size = bestMutation.size;
+    const placementId = state.placementIdCounter++;
+    for (let dr = 0; dr < size; dr++) {
+      for (let dc = 0; dc < size; dc++) {
+        state.board[r + dr][c + dc] = {
+          mutationId: bestMutation.id,
+          isPlayerPlaced: false,
+          growthStage: 0, // 自然発生は常に成長段階0から開始
+          originRow: r,
+          originCol: c,
+          size,
+          placementId,
+          row: r + dr,
+          col: c + dc
+        };
       }
     }
   }

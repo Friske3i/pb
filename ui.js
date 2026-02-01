@@ -13,14 +13,26 @@
       .then(function (config) {
         state = window.Game.createGameState(config);
         destroyMode = false;
-        // 初期状態を履歴に保存
-        window.Game.saveInitialState(state);
-        // 初期状態を履歴に保存
-        window.Game.saveInitialState(state);
+
+        // Check for board parameter in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const boardParam = urlParams.get('board');
+        let imported = false;
+
+        if (boardParam) {
+          imported = window.Game.importBoard(state, boardParam);
+        }
+
+        if (!imported) {
+          // 初期状態を履歴に保存
+          window.Game.saveInitialState(state);
+        } else {
+          // importBoard calls saveInitialState internally in our implementation
+          // but let's ensure we are consistent.
+          // If importBoard does it, we are good.
+        }
 
         // Sync UI inputs with state default
-        document.getElementById('fortuneInput').value = state.fortune || 0;
-        document.getElementById('chipInput').value = state.chips || 0;
         document.getElementById('fortuneInput').value = state.fortune || 0;
         document.getElementById('chipInput').value = state.chips || 0;
 
@@ -468,18 +480,19 @@
   }
   async function onCopyImageClick() {
     const btn = document.getElementById('copyImageBtn');
-    const originalText = btn.textContent;
+    const span = btn.querySelector('span');
+    const originalText = span.textContent;
 
     // html2canvasの存在チェック
     if (typeof html2canvas === 'undefined') {
-      btn.textContent = 'Error: Library not loaded';
+      span.textContent = 'Error: Library not loaded';
       setTimeout(() => {
-        btn.textContent = originalText;
+        span.textContent = originalText;
       }, 2000);
       return;
     }
 
-    btn.textContent = 'Capturing...';
+    span.textContent = 'Capturing...';
     btn.disabled = true;
 
     let container = null; // containerをtryブロックの外で宣言
@@ -557,7 +570,7 @@
           await navigator.clipboard.write([
             new ClipboardItem({ 'image/png': blob })
           ]);
-          btn.textContent = 'Copied!';
+          span.textContent = 'Copied!';
         } catch (err) {
           console.error('Clipboard write failed:', err);
           // Fallback: ダウンロード
@@ -568,9 +581,9 @@
             link.download = 'mutation_plan.png';
             link.click();
             URL.revokeObjectURL(url);
-            btn.textContent = 'Downloaded';
+            span.textContent = 'Downloaded';
           } else {
-            btn.textContent = 'Failed';
+            span.textContent = 'Failed';
           }
         } finally {
           // 確実にクリーンアップ
@@ -578,7 +591,7 @@
             document.body.removeChild(container);
           }
           setTimeout(() => {
-            btn.textContent = originalText;
+            span.textContent = originalText;
             btn.disabled = false;
           }, 2000);
         }
@@ -586,7 +599,7 @@
 
     } catch (err) {
       console.error('Screenshot failed:', err);
-      btn.textContent = 'Error';
+      span.textContent = 'Error';
 
       // エラー時のクリーンアップ
       if (container && container.parentNode) {
@@ -594,9 +607,34 @@
       }
 
       setTimeout(() => {
-        btn.textContent = originalText;
+        span.textContent = originalText;
         btn.disabled = false;
       }, 2000);
+    }
+  }
+
+  async function onCopyUrlClick() {
+    const btn = document.getElementById('copyUrlBtn');
+    const originalText = btn.querySelector('span').textContent;
+    const boardStr = window.Game.exportBoard(state);
+
+    if (!boardStr) {
+      alert('Failed to export board');
+      return;
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('board', boardStr);
+
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      btn.querySelector('span').textContent = 'Copied!';
+      setTimeout(() => {
+        btn.querySelector('span').textContent = originalText;
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy', err);
+      prompt('Copy this URL:', url.toString());
     }
   }
   function onProgressClick() {
@@ -946,6 +984,7 @@
     progressBtn.addEventListener('contextmenu', onProgressContextmenu);
 
     document.getElementById('copyImageBtn').addEventListener('click', onCopyImageClick);
+    document.getElementById('copyUrlBtn').addEventListener('click', onCopyUrlClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
     document.getElementById('clearAllBtn').addEventListener('click', clearAll);
     document.getElementById('undoBtn').addEventListener('click', onUndo);
@@ -1127,20 +1166,7 @@
     renderAll();
   }
 
-  async function init() {
-    const config = await window.Game.loadConfig();
-    state = window.Game.createGameState(config);
 
-    // Modal init must happen after DOM load, init() is called at end of IIFE
-    // Check if modal elements exist to attach listeners early, or do it lazy
-    // Here we do it via modal object lazy init
-
-    renderMutationList();
-    renderAll();
-    bindEvents();
-    updateDestroyButton();
-    updateHistoryButtons();
-  }
 
   init();
 })();

@@ -476,5 +476,61 @@ window.Game = {
   canRedo(state) { return state.historyIndex < state.history.length - 1; },
   getMutationTypes(state) { return state.mutationTypes; },
   getBoard(state) { return state.board; },
-  getScoreParam(state) { return { index: state.scoreParamIndex, name: state.scoreParamName }; }
+  getScoreParam(state) { return { index: state.scoreParamIndex, name: state.scoreParamName }; },
+
+  // 盤面を文字列化 (Base64 encoded JSON of 10x10 simplified grid)
+  exportBoard(state) {
+    const simplified = state.board.map(row =>
+      row.map(cell => {
+        // 重複配置や部分的なセルを避けるため、OriginのみIDを記録
+        if (!cell) return -1;
+        if (cell.originRow === cell.row && cell.originCol === cell.col) {
+          return cell.mutationId;
+        }
+        return -1; // Origin以外は無視 (復元時に再配置されるため)
+      })
+    );
+    try {
+      const json = JSON.stringify(simplified);
+      return btoa(json);
+    } catch (e) {
+      console.error('Export failed', e);
+      return '';
+    }
+  },
+
+  // 文字列から盤面を読み込む
+  importBoard(state, encodedStr) {
+    try {
+      const json = atob(encodedStr);
+      const simplified = JSON.parse(json);
+
+      if (!Array.isArray(simplified) || simplified.length !== BOARD_SIZE) {
+        throw new Error('Invalid board data');
+      }
+
+      // 盤面をクリア in-place
+      state.board = createEmptyBoard();
+      state.placementIdCounter = 0;
+
+      // 配置の復元
+      for (let r = 0; r < BOARD_SIZE; r++) {
+        for (let c = 0; c < BOARD_SIZE; c++) {
+          const id = simplified[r][c];
+          if (id !== -1 && id !== null) {
+            // Mutationが存在するか確認
+            if (state.mutationTypes[id]) {
+              placeMutation(state, r, c, id);
+            }
+          }
+        }
+      }
+      // 履歴もリセットしたほうが安全かも？
+      saveInitialState(state);
+      return true;
+    } catch (e) {
+      console.error('Import failed', e);
+      return false;
+    }
+  }
 };

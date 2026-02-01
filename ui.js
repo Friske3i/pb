@@ -17,10 +17,20 @@
         // Check for board parameter in URL
         const urlParams = new URLSearchParams(window.location.search);
         const boardParam = urlParams.get('board');
+        const cropParam = urlParams.get('crop');
         let imported = false;
 
         if (boardParam) {
           imported = window.Game.importBoard(state, boardParam);
+        }
+
+        // Apply Crop Parameter if present
+        if (cropParam) {
+          const cropIndex = parseInt(cropParam, 10);
+          if (!isNaN(cropIndex) && cropIndex >= 0 && cropIndex < state.scoreParams.length) {
+            state.scoreParamIndex = cropIndex;
+            state.scoreParamName = state.scoreParams[cropIndex];
+          }
         }
 
         if (!imported) {
@@ -625,6 +635,7 @@
 
     const url = new URL(window.location.href);
     url.searchParams.set('board', boardStr);
+    url.searchParams.set('crop', state.scoreParamIndex);
 
     try {
       await navigator.clipboard.writeText(url.toString());

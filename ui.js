@@ -558,6 +558,15 @@
         }
       }
 
+      // Evaluation Mode: 色が異なる場合は上書きを許可
+      if (state.evaluationMode) {
+        const oldColor = existingCell.color || null;
+        const newColor = selectedColor || null;
+        if (oldColor !== newColor) {
+          return true;
+        }
+      }
+
       // 以下、再設置が不要（冗長）な場合はfalseを返す
       const mutation = state.mutationTypes[mutationId];
       if (mutation.size === 1) return false;

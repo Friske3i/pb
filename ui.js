@@ -7,6 +7,7 @@
   let lastScrollTop = 0;
   let isMouseDown = false;
   let lastProcessedCell = null; // 最後に処理したセルを記録
+  let selectedColor = null; // 選択中のパレット色
 
   function init() {
     window.Game.loadConfig()
@@ -54,12 +55,33 @@
         document.getElementById('uniqueBuffSlider').value = unique;
         document.getElementById('uniqueValueDisplay').textContent = `${unique} (${Math.min(unique * 3, 36)}%)`;
 
+        initPalette(); // パレット初期化
         renderAll();
         bindEvents();
       })
       .catch(function (err) {
         document.body.innerHTML = '<div class="app"><p style="color:#f7768e">設定の読み込みに失敗しました。config.json を配置し、HTTP サーバー経由で開いてください。</p><pre>' + (err && err.message) + '</pre></div>';
       });
+  }
+
+  function initPalette() {
+    const palette = document.getElementById('evaluationPalette');
+    if (!palette) return;
+    const btns = palette.querySelectorAll('.color-btn');
+    btns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // 全ボタンからselectedを削除
+        btns.forEach(b => b.classList.remove('selected'));
+        // 押されたボタンにselectedを追加
+        const target = e.currentTarget;
+        target.classList.add('selected');
+        // 色をセット (空文字ならnull)
+        const color = target.dataset.color;
+        selectedColor = color || null;
+      });
+    });
+    // デフォルトでNoneを選択状態に
+    if (btns.length > 0) btns[0].classList.add('selected');
   }
 
   function renderAll() {
@@ -72,6 +94,18 @@
     updateDestroyButton();
     updateHistoryButtons();
     renderMutationStats();
+    updatePaletteVisibility(); // パレット表示切替
+  }
+
+  function updatePaletteVisibility() {
+    const palette = document.getElementById('evaluationPalette');
+    if (palette) {
+      if (state.evaluationMode) {
+        palette.classList.remove('hidden');
+      } else {
+        palette.classList.add('hidden');
+      }
+    }
   }
 
   function renderScoreParamSelector() {
@@ -257,6 +291,44 @@
           if (cell.size > 1) div.classList.add('size-' + cell.size);
           const mutation = state.mutationTypes[cell.mutationId];
 
+          // 色の適用 (背景色)
+          if (cell.color && isOrigin) {
+            // Unified Background Areaを持つsize 1より大きいセルへの適用はCSSで処理が難しいので
+            // size-2, size-3のoriginのbefore要素に色をつけたいが、inline styleでbeforeは制御できない。
+            // 代わりにカスタムプロパティを使うか、.cell自体に色をつけてoverflow: visibleな擬似要素に継承させる。
+            // 既存のCSS設計では .cell.origin.size-2::before が背景を担当している。
+            // なので、divにstyle="--cell-bg: color" をセットし、CSSで var(--cell-bg) を使うように変更するのがベストだが、
+            // ここでは簡易的に、size-1なら直接background、size>1ならJSで特殊処理が必要かも。
+            // しかし `cell.row === r` なので、すべての構成セルに同じcolor情報が入っているはず（game.js修正済み）。
+            // 既存CSS: .cell.origin.size-2::before { background: ... }
+            // Inline styleで対応するには、size > 1の場合も考慮が必要。
+
+            // 簡易ハック: size > 1のとき、bg colorを適用するためにstyleタグを動的生成するか、
+            // あるいは単にoriginセルにbackground-colorをつけて、::beforeのbackgroundをtransparentにするか。
+            // だが::beforeはサイズ拡張されている。
+
+            // 今回はシンプルに、size=1はdiv自体、size>1はoriginセルにstyleをつけ、
+            // CSSで "style属性がある場合はそれを使う" ように::beforeを調整するのは困難。
+
+            // よって、 --custom-color 変数を使うアプローチにする。
+            div.style.setProperty('--custom-color', cell.color);
+            div.classList.add('has-custom-color');
+          } else if (cell.color) {
+            // 非originセル（size > 1の従属セル）でも色情報は持っているが、
+            // 表示はoriginが一括管理しているので何もしなくて良い（originの::beforeが覆うため）
+            // ただし、size-1の場合は各セルが独立。
+            // size > 1の場合でも、::beforeがカバーする範囲はoriginのみ。
+          }
+
+          // size 1の場合
+          if (cell.size === 1 && cell.color) {
+            div.style.backgroundColor = cell.color;
+            // border colorも合わせると綺麗かも？
+            div.style.borderColor = cell.color;
+            // テキスト色調整（明るい背景なら黒、暗いなら白）
+            // ここでは簡易的に白文字維持か、必要なら調整。
+          }
+
           let score = window.Game.calculateCellScore(cell, mutation, state.scoreParamIndex, state.simulationMode, state.evaluationMode);
 
           if (isOrigin) {
@@ -438,7 +510,15 @@
       return;
     }
 
-    const ok = window.Game.placeMutation(state, row, col, state.selectedMutationId);
+    // Evaluation mode + selected color support
+    // If Evaluation Mode is ON, pass the selected color.
+    // NOTE: User only requested color for evaluation mode.
+    let options = {};
+    if (state.evaluationMode && selectedColor) {
+      options.color = selectedColor;
+    }
+
+    const ok = window.Game.placeMutation(state, row, col, state.selectedMutationId, options);
     if (ok) {
       // 履歴を保存（実行後）
       window.Game.saveStateSnapshot(state);

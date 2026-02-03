@@ -226,10 +226,11 @@ function calculateScore(state) {
   };
 }
 
-function placeMutation(state, row, col, mutationId) {
+function placeMutation(state, row, col, mutationId, options) {
   const mutation = state.mutationTypes[mutationId];
   if (!mutation) return false;
   const size = mutation.size;
+  const color = (options && options.color) || null;
 
   // 範囲チェック（盤面外には置けない）
   if (row < 0 || row + size > BOARD_SIZE || col < 0 || col + size > BOARD_SIZE) {
@@ -278,6 +279,7 @@ function placeMutation(state, row, col, mutationId) {
         originCol: col,
         size,
         placementId,
+        color, // 色情報を保存
         row: r,
         col: c
       };

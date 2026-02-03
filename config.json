@@ -405,11 +405,11 @@
       "conditions": [
         {
           "id": 9,
-          "amount": 4
+          "amount": 2
         },
         {
           "id": 15,
-          "amount": 4
+          "amount": 2
         }
       ],
       "scores": {
@@ -438,7 +438,7 @@
       "conditions": [
         {
           "id": 4,
-          "amount": 4
+          "amount": 2
         }
       ],
       "scores": {
@@ -467,7 +467,7 @@
       "conditions": [
         {
           "id": 7,
-          "amount": 4
+          "amount": 2
         }
       ],
       "scores": {
@@ -552,11 +552,11 @@
       "conditions": [
         {
           "id": 3,
-          "amount": 2
+          "amount": 1
         },
         {
           "id": 8,
-          "amount": 2
+          "amount": 1
         }
       ],
       "scores": {
@@ -585,11 +585,11 @@
       "conditions": [
         {
           "id": 2,
-          "amount": 2
+          "amount": 1
         },
         {
           "id": 13,
-          "amount": 2
+          "amount": 1
         }
       ],
       "scores": {
@@ -618,11 +618,11 @@
       "conditions": [
         {
           "id": 0,
-          "amount": 2
+          "amount": 1
         },
         {
           "id": 1,
-          "amount": 2
+          "amount": 1
         }
       ],
       "scores": {
@@ -651,7 +651,7 @@
       "conditions": [
         {
           "id": 14,
-          "amount": 8
+          "amount": 4
         }
       ],
       "scores": {
@@ -1182,7 +1182,11 @@
       "conditions": [
         {
           "id": 5,
-          "amount": 8
+          "amount": 2
+        },
+        {
+          "id": 19,
+          "amount": 2
         }
       ],
       "scores": {
@@ -1313,14 +1317,14 @@
         "potato": 0,
         "cactus": 0,
         "pumpkin": 0,
-        "melon": 4000,
+        "melon": 800,
         "rose": 0,
         "sun": 0,
         "moon": 0,
         "cane": 0,
         "wart": 0,
         "mush": 0,
-        "cocoa": 2000
+        "cocoa": 400
       },
       "image": "assets/Shellfruit.webp",
       "category": "mutated",

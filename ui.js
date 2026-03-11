@@ -737,6 +737,57 @@
       prompt('Copy this URL:', url.toString());
     }
   }
+
+  function buildSkymutationLayout(state) {
+    const layout = [];
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        const cell = state.board[r][c];
+        if (!cell) continue;
+        const mutation = state.mutationTypes[cell.mutationId];
+        if (!mutation) continue;
+        layout.push([
+          r,
+          c,
+          mutation.name || '',
+          cell.isPlayerPlaced ? 1 : 0
+        ]);
+      }
+    }
+    return layout;
+  }
+
+  async function onCopySkymutationClick() {
+    const btn = document.getElementById('copySkymutationBtn');
+    const span = btn.querySelector('span');
+    const originalText = span.textContent;
+
+    if (typeof LZString === 'undefined') {
+      span.textContent = 'LZString not loaded';
+      setTimeout(() => {
+        span.textContent = originalText;
+      }, 2000);
+      return;
+    }
+
+    const layout = buildSkymutationLayout(state);
+    const json = JSON.stringify(layout);
+    // Use LZString's canonical URL-safe format for query strings.
+    const urlSafe = LZString.compressToEncodedURIComponent(json);
+    const finalUrl = `https://skymutations.eu/greenhouse?layout=${urlSafe}`;
+
+    try {
+      await navigator.clipboard.writeText(finalUrl);
+      span.textContent = 'Copied!';
+      setTimeout(() => {
+        span.textContent = originalText;
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy Skymutation URL', err);
+      prompt('Copy this URL:', finalUrl);
+    }
+  }
+
   function onProgressClick() {
     window.Game.progress(state);
     // 履歴を保存（実行後）
@@ -1085,6 +1136,7 @@
 
     document.getElementById('copyImageBtn').addEventListener('click', onCopyImageClick);
     document.getElementById('copyUrlBtn').addEventListener('click', onCopyUrlClick);
+    document.getElementById('copySkymutationBtn').addEventListener('click', onCopySkymutationClick);
     document.getElementById('destroyModeBtn').addEventListener('click', toggleDestroyMode);
     document.getElementById('clearAllBtn').addEventListener('click', clearAll);
     document.getElementById('undoBtn').addEventListener('click', onUndo);

@@ -423,7 +423,7 @@
         "sun": 0,
         "moon": 0,
         "cane": 0,
-        "wart": 720,
+        "wart": 360,
         "mush": 0,
         "cocoa": 0
       },
@@ -454,7 +454,7 @@
         "cane": 0,
         "wart": 0,
         "mush": 0,
-        "cocoa": 400
+        "cocoa": 200
       },
       "image": "assets/Choconut.webp",
       "category": "mutated",
@@ -471,7 +471,7 @@
         }
       ],
       "scores": {
-        "wheat": 200,
+        "wheat": 100,
         "carrot": 0,
         "potato": 0,
         "cactus": 0,
@@ -508,8 +508,8 @@
         "carrot": 0,
         "potato": 0,
         "cactus": 0,
-        "pumpkin": 60,
-        "melon": 280,
+        "pumpkin": 30,
+        "melon": 140,
         "rose": 0,
         "sun": 0,
         "moon": 0,
@@ -561,8 +561,8 @@
       ],
       "scores": {
         "wheat": 0,
-        "carrot": 210,
-        "potato": 245,
+        "carrot": 105,
+        "potato": 122,
         "cactus": 0,
         "pumpkin": 0,
         "melon": 0,
@@ -596,13 +596,13 @@
         "wheat": 0,
         "carrot": 0,
         "potato": 0,
-        "cactus": 135,
+        "cactus": 68,
         "pumpkin": 0,
         "melon": 0,
         "rose": 0,
         "sun": 0,
         "moon": 0,
-        "cane": 180,
+        "cane": 90,
         "wart": 0,
         "mush": 0,
         "cocoa": 0
@@ -637,7 +637,7 @@
         "moon": 0,
         "cane": 0,
         "wart": 0,
-        "mush": 132,
+        "mush": 66,
         "cocoa": 0
       },
       "image": "assets/Veilshroom.webp",
@@ -661,7 +661,7 @@
         "cactus": 0,
         "pumpkin": 0,
         "melon": 0,
-        "rose": 600,
+        "rose": 300,
         "sun": 0,
         "moon": 0,
         "cane": 0,
